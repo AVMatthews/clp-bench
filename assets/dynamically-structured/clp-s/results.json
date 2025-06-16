@@ -1,0 +1,36 @@
+{
+    "target": "clps",
+    "targetDisplayedName": "CLP-S",
+    "displayedOrder": 1,
+    "isEnable": true,
+    "type": 2,
+    "ingestTime": 846829,
+    "compressedSize": 580013403,
+    "avgIngestMem": 231873340,
+    "metrics": [
+        {
+            "metric": 1,
+            "avgQueryMem": 134112685,
+            "queryTimes": [
+                744,
+                34078,
+                725,
+                1238,
+                986,
+                764
+            ]
+        },
+        {
+            "metric": 2,
+            "avgQueryMem": 86551945,
+            "queryTimes": [
+                3756,
+                41432,
+                2779,
+                4202,
+                4023,
+                4837
+            ]
+        }
+    ]
+}

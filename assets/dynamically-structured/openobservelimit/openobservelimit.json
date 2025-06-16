@@ -1,0 +1,36 @@
+{
+    "target": "openobservelimit",
+    "targetDisplayedName": "OpenObserve (w/ LIMIT)",
+    "displayedOrder": 4,
+    "isEnable": true,
+    "type": 2,
+    "ingestTime": 6519505,
+    "compressedSize": 2952256027,
+    "avgIngestMem": 5281799173,
+    "metrics": [
+        {
+            "metric": 1,
+            "avgQueryMem": 1280803188,
+            "queryTimes": [
+                1344,
+                1475,
+                2577,
+                3105,
+                1190,
+                1777
+            ]
+        },
+        {
+            "metric": 2,
+            "avgQueryMem": 1286987776,
+            "queryTimes": [
+                12447,
+                2197,
+                2848,
+                3603,
+                1498,
+                2033
+            ]
+        }
+    ]
+}

@@ -1,0 +1,36 @@
+{
+    "target": "clickhousejson",
+    "targetDisplayedName": "ClickHouse (JSON)",
+    "displayedOrder": 4,
+    "isEnable": true,
+    "type": 2,
+    "ingestTime": 2540819,
+    "compressedSize": 1321198540,
+    "avgIngestMem": 3563308493,
+    "metrics": [
+        {
+            "metric": 1,
+            "avgQueryMem": 1028527343,
+            "queryTimes": [
+                385917,
+                687572,
+                397,
+                412,
+                1106,
+                383523
+            ]
+        },
+        {
+            "metric": 2,
+            "avgQueryMem": 914214299,
+            "queryTimes": [
+                301084,
+                653889,
+                11072,
+                9471,
+                5688,
+                300220
+            ]
+        }
+    ]
+}
