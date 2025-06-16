@@ -8,12 +8,11 @@ import {
     Box,
     Chip,
     Link,
-    Typography,
+    Typography
 } from '@mui/joy';
 import { BarChart } from '@mui/x-charts/BarChart';
 
 import Divider, { dividerClasses } from '@mui/material/Divider';
-import { get } from 'http';
 
 const TYPE = ['', 'unstructured', 'semiStructured'];
 const METRIC = ['', 'hotRun', 'coldRun'];
@@ -129,7 +128,7 @@ const BarCharts = () => {
     const [metric, setMetric] = useState(METRIC[1]);
     const [benchmarkWorkload, setBenchmarkWorkload] = useState<string>();
     const [loading, setLoading] = useState(true);
-    const [chartData, setChartData] = useState([]);
+    const [chartData, setChartData] = useState<{ target: string; value: number }[]>([]);
     const [selectedMetric, setSelectedMetric] = useState('compressionRatio');
     const [selectedQuery, setSelectedQuery] = useState(0);
     const [allTargets, setAllTargets] = useState<string[]>([]);
@@ -221,14 +220,13 @@ const BarCharts = () => {
                     const ratioData = filteredData.map(item => ({
                         target: item.target,
                         value: maxValue ? (maxValue / item.value) : 0, // Avoid division by zero
-                        color: item.color,
                     }));
                     filteredData = ratioData;
                 }
                 
                 const sortedData = filteredData.sort((a, b) => b.value - a.value);
                 setChartData(sortedData);
-                setBarColors(sortedData.map(item => colorMapping[item.target] || '#000000')); // Set bar colors based on target
+                setBarColors(sortedData.map(item => colorMapping[item.target as keyof typeof colorMapping] || '#000000')); // Set bar colors based on target
                 console.log('Chart Data:', sortedData);
             } catch (error) {
                 console.error(error);
@@ -411,6 +409,18 @@ const BarCharts = () => {
             </Box>
             )}
             <span>The used benchmark workload: {benchmarkWorkload}</span>
+            <Box
+                sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    mb: 2, // margin bottom for spacing
+                }}
+                >
+                <Typography component="h2">
+                    {getSeriesLabel(selectedMetric)}
+                </Typography>
+            </Box>
             {loading ? (
                 <div>Loading data...</div> // Show loading message or spinner
             ) : chartData.length > 0 ? (
@@ -427,17 +437,11 @@ const BarCharts = () => {
                     }]}
                     series={[
                         { 
-                            dataKey: 'value', label: getSeriesLabel(selectedMetric), 
+                            dataKey: 'value', 
                         },
                     ]}
-                    yAxis={[{ 
-                        title: getSeriesLabel(selectedMetric), 
-                        position: 'left',
-                        titleStyle: { fontWeight: 'bold', fontSize: '14px' }, // Optional styling
-                    }]} 
-                    tooltip={{ show: true }}
                     barLabel={
-                        (data) => getBarLabel(selectedMetric, data.value)
+                        (data) => getBarLabel(selectedMetric, data.value ?? 0)
                     }
                 />
             ) : (

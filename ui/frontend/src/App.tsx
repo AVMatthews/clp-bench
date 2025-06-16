@@ -15,7 +15,7 @@ import {
 } from '@mui/joy'
 
 import Divider, { dividerClasses } from '@mui/material/Divider';
-import TransitionProps from '@mui/material/transitions';
+import { TransitionProps } from '@mui/material/transitions';
 
 import {
     Dialog,
