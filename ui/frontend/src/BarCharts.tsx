@@ -10,7 +10,7 @@ import {
     Link,
     Typography
 } from '@mui/joy';
-import { BarChart } from '@mui/x-charts/BarChart';
+import { BarChart, BarLabel, BarLabelProps } from '@mui/x-charts/BarChart';
 
 import Divider, { dividerClasses } from '@mui/material/Divider';
 
