@@ -1,0 +1,15 @@
+/* styles.css */
+.flex-container {
+    display: flex;
+    flex-direction: column; /* Stack children vertically */
+    width: 100%; /* Full width */
+    height: 100vh; /* Full viewport height */
+    padding: 20px; /* Optional padding */
+    box-sizing: border-box; /* Include padding in width/height */
+}
+
+.chart-container {
+    width: 100%; /* Full width */
+    height: 600px; /* Fixed height for the chart */
+    flex: 1; /* Allow the chart container to grow */
+}

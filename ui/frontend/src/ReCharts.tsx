@@ -1,8 +1,10 @@
 import './App.css';
 import logo from './assets/clp-logo.png';
 import { useEffect, useState } from 'react';
-import { Box, Chip, Link, Typography } from '@mui/joy';
+import { Box, Chip, Link, Tooltip as JoyTooltip, Typography } from '@mui/joy';
 import Divider, { dividerClasses } from '@mui/material/Divider';
+import InfoIcon from '@mui/icons-material/Info';
+import IconButton from '@mui/material/IconButton';
 import {
   ResponsiveContainer,
   BarChart,
@@ -12,9 +14,10 @@ import {
   YAxis,
   Tooltip,
   LabelList,
+  Label,
 } from 'recharts';
 
-const TYPE = ['', 'unstructured', 'semiStructured'];
+const TYPE = ['', 'unstructured', 'json'];
 const METRIC = ['', 'hotRun', 'coldRun'];
 
 type BenchmarkingResultBasic<T> = {
@@ -39,7 +42,7 @@ const BENCHMARK_WORKLOAD = BenchmarkingResultBasicInitializer<{
 }>((type) => {
   if (type === 'unstructured')
     return { name: 'Hadoop (258 GB)', size: 276224164352 };
-  if (type === 'semiStructured')
+  if (type === 'json')
     return { name: 'MongoDB (64 GB)', size: 69582861765 };
   return { name: 'ERROR', size: 0 };
 });
@@ -47,23 +50,25 @@ const BENCHMARK_WORKLOAD = BenchmarkingResultBasicInitializer<{
 const getSeriesLabel = (metric: string) => {
   const map: Record<string, string> = {
     compressionRatio:
-      'Compression Ratio (Original Size / Compressed Size)',
-    ingestion_speed: 'Ingestion Speed (MB/s)',
-    avg_ingest_mem: 'Ingestion Memory Efficiency',
-    avg_query_mem: 'Search Memory Efficiency',
-    query_times: 'Query Efficiency',
+      'Compression Ratio',
+    ingestion_speed: 'Ingestion Speed',
+    avg_ingest_mem: 'Ingestion Memory Usage',
+    avg_query_mem: 'Search Memory Usage',
+    query_times: 'Query Latency',
   };
   return map[metric] || metric;
 };
 
 const getBarLabel = (metric: string, dataType: string, value: number) => {
   let suffix = '';
-  if (metric === 'ingestion_speed'){
-    suffix = 'MB/s';
+  if (metric === 'ingestionSpeed'){
+    suffix = ' MB/s';
   } else if ((metric === 'avg_ingest_mem' || metric === 'avg_query_mem') && dataType === 'raw') {
-    suffix = 'GB';
+    suffix = ' GB';
   } else if (metric === 'query_times' && dataType === 'raw') {
     suffix = 's';
+  }else if (metric === 'compressionRatio') {
+    suffix = ' : 1';
   }else{
     suffix = 'x';
   }
@@ -71,6 +76,10 @@ const getBarLabel = (metric: string, dataType: string, value: number) => {
   if ( value < 1){
     return value.toFixed(2) + suffix;
   }else {
+    console.log(value);
+    if  ((value % 1) < 0.05 || (value % 1) > 0.95) {
+        return value.toFixed(0) + suffix;
+    }
     return value.toFixed(1) + suffix;
   }
 };
@@ -103,8 +112,16 @@ const TARGET_ORDER = [
     'grep',
   ];
 
+const metricOptions = [
+    'compressionRatio',
+    'query_times',
+    'avg_query_mem',
+    'avg_ingest_mem',
+    'ingestionSpeed',
+];
+
 function ReCharts() {
-  const [type, setType] = useState(TYPE[1]);
+  const [type, setType] = useState(TYPE[2]);
   const [metric, setMetric] = useState(METRIC[1]);
   const [selectedMetric, setSelectedMetric] = useState('compressionRatio');
   const [selectedQuery, setSelectedQuery] = useState(0);
@@ -113,10 +130,17 @@ function ReCharts() {
   const [chartData, setChartData] = useState<any[]>([]);
   const [benchmarkWorkload, setBenchmarkWorkload] = useState('');
   const [loading, setLoading] = useState(true);
-  //default, comparison, raw
-  const [dataType, setDataType] = useState('default');
+  //default, raw, comparison
+  const [dataType, setDataType] = useState('raw');
+  const [queryLength , setQueryLength] = useState(6);
 
   useEffect(() => {
+    if (type === 'unstructured') {
+        setQueryLength(13);
+    }else {
+        setQueryLength(6);
+    }
+
     async function fetchData() {
       setLoading(true);
       try {
@@ -152,7 +176,7 @@ function ReCharts() {
                     sizeMB /
                     (item.compressed_size / 1024 / 1024);
                 break;
-              case 'ingestion_speed':
+              case 'ingestionSpeed':
                 if (item.ingest_time && sizeMB)
                   value = sizeMB / (item.ingest_time / 1000);
                 break;
@@ -202,7 +226,7 @@ function ReCharts() {
           ['avg_ingest_mem', 'avg_query_mem', 'query_times'].includes(
             selectedMetric
           ) &&
-          dataType !== 'raw'
+          dataType === 'comparison'
         ) {
           const mx = Math.max(...filtered.map((d) => d.value));
           filtered = filtered.map((d) => ({
@@ -211,12 +235,12 @@ function ReCharts() {
           }));
         }
 
-        if( selectedMetric === 'compressionRatio' || selectedMetric === 'ingestion_speed') {
+        if( selectedMetric === 'compressionRatio' || selectedMetric === 'ingestionSpeed') {
             filtered.sort((a, b) => b.value - a.value);
-        }else if(dataType === 'raw') {
-            filtered.sort((a, b) => a.value - b.value);
+        }else if(dataType === 'comparison') {
+            filtered.sort((a, b) => b.value - a.value);
         }else{
-            filtered.sort((a, b) => b.value - a.value);
+            filtered.sort((a, b) => a.value - b.value);
         }
         setChartData(filtered);
       } catch (e) {
@@ -235,32 +259,26 @@ function ReCharts() {
     dataType
   ]);
 
-  const metricOptions = [
-    'compressionRatio',
-    'query_times',
-    'avg_query_mem',
-    'avg_ingest_mem',
-    'ingestion_speed',
-  ];
-
   return (
-    <Box sx={{ margin: 2 }}>
-        <img
-            src={logo}
-            alt="CLPBench"
-            style={{ width: 100, margin: '15px 0' }}
-        />
+    <Box className="flex-container"> {/* Use the flex container class */}
+        <Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+            <img
+                src={logo}
+                alt="CLPBench"
+                style={{ width: 100, margin: '15px 0' }}
+            />
+        </Box>
         <Box
             sx={{
-            display: 'flex',
-            alignItems: 'center',
-            bgcolor: 'background.paper',
-            color: 'text.secondary',
-            '& svg': { m: 2 },
-            [`& .${dividerClasses.root}`]: {
-                mx: 0.5,
-                borderWidth: '1px',
-            },
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                bgcolor: 'background.paper',
+                color: 'text.secondary',
+                [`& .${dividerClasses.root}`]: {
+                    mx: 0.5,
+                    borderWidth: '1px',
+                },
             }}
         >
             <Link href="https://github.com/y-scope/clp-bench/blob/main/docs/methodology.md">
@@ -274,24 +292,62 @@ function ReCharts() {
 
         {/* Type selector */}
         <Box sx={{ display: 'flex', gap: 1, mt: 2 }}>
-            <span>Log Type:</span>
-            {['unstructured', 'semiStructured'].map((t) => (
+            <Typography variant="body1" sx={{color: 'text.primary', marginRight: 1 }}>
+                Log Format
+                <JoyTooltip title="Information about Log Type" arrow>
+                <IconButton
+                    aria-label="info"
+                    sx={{
+                        color: '#5bc0de', 
+                        width: '30px', 
+                        height: '20px', 
+                        fontSize: '20px', 
+                    }}
+                    onClick={(e) => {
+                        // You can also toggle the tooltip on click if needed
+                        // For example, using a state to control visibility
+                    }}
+                >
+                    <InfoIcon sx={{ fontSize: '20px' }}/>
+                </IconButton>
+                </JoyTooltip>
+                :
+            </Typography>
+            {['json', 'unstructured'].map((t) => (
             <Chip
                 key={t}
                 color={type === t ? 'success' : 'neutral'}
                 onClick={() => setType(t)}
                 variant="solid"
+                style={{ fontFamily: 'Roboto,sans-serif'}}
             >
-                {t === 'unstructured'
-                ? 'Unstructured'
-                : 'Semi‑Structured'}
+                {t === 'json'
+                ? 'JSON'
+                : 'Unstructured'}
             </Chip>
             ))}
         </Box>
 
-        {/* Targets */}
+        {/* Tools */}
         <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mt: 2 }}>
-            <span>Select Targets:</span>
+        <Typography variant="body1" sx={{color: 'text.primary', marginRight: 1 }}>
+                Tools
+            <IconButton
+                aria-label="info"
+                sx={{
+                    color: '#5bc0de', 
+                    width: '30px', 
+                    height: '20px', 
+                    fontSize: '20px', 
+                }}
+                onClick={(e) => {
+                    // You can also toggle the tooltip on click if needed
+                    // For example, using a state to control visibility
+                }}
+            >
+                <InfoIcon sx={{ fontSize: '20px' }}/>
+            </IconButton>:
+            </Typography>
             {[...allTargets]
                 .sort((a, b) => TARGET_ORDER.indexOf(a) - TARGET_ORDER.indexOf(b))
                 .map(target => (
@@ -306,6 +362,7 @@ function ReCharts() {
                 )
                 }
                 variant="solid"
+                style={{ fontFamily: 'Roboto,sans-serif'}}
             >
                 {target}
             </Chip>
@@ -314,7 +371,24 @@ function ReCharts() {
 
         {/* Metric selector */}
         <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mt: 2 }}>
-            <span>Select Metric:</span>
+        <Typography variant="body1" sx={{color: 'text.primary', marginRight: 1 }}>
+                Metric
+            <IconButton
+                aria-label="info"
+                sx={{
+                    color: '#5bc0de', 
+                    width: '30px', 
+                    height: '20px', 
+                    fontSize: '20px', 
+                }}
+                onClick={(e) => {
+                    // You can also toggle the tooltip on click if needed
+                    // For example, using a state to control visibility
+                }}
+            >
+                <InfoIcon sx={{ fontSize: '20px' }}/>
+            </IconButton>:
+            </Typography>
             {metricOptions.map((m) => (
             <Chip
                 key={m}
@@ -324,6 +398,7 @@ function ReCharts() {
                 setSelectedQuery(-1);
                 }}
                 variant="solid"
+                style={{ fontFamily: 'Roboto,sans-serif'}}
             >
                 {getSeriesLabel(m)}
             </Chip>
@@ -335,17 +410,35 @@ function ReCharts() {
             selectedMetric
         ) && (
             <Box sx={{ display: 'flex', gap: 1, mt: 2 }}>
-            <span>Run Type:</span>
-            {['hotRun', 'coldRun'].map((m) => (
-                <Chip
-                key={m}
-                color={metric === m ? 'success' : 'neutral'}
-                onClick={() => setMetric(m)}
-                variant="solid"
+                <Typography variant="body1" sx={{color: 'text.primary', marginRight: 1 }}>
+                    Run Type
+                <IconButton
+                    aria-label="info"
+                    sx={{
+                        color: '#5bc0de', 
+                        width: '30px', 
+                        height: '20px', 
+                        fontSize: '20px', 
+                    }}
+                    onClick={(e) => {
+                        // You can also toggle the tooltip on click if needed
+                        // For example, using a state to control visibility
+                    }}
                 >
-                {m === 'hotRun' ? 'Hot Run' : 'Cold Run'}
-                </Chip>
-            ))}
+                    <InfoIcon sx={{ fontSize: '20px' }}/>
+                </IconButton>:
+                </Typography>
+                {['hotRun', 'coldRun'].map((m) => (
+                    <Chip
+                    key={m}
+                    color={metric === m ? 'success' : 'neutral'}
+                    onClick={() => setMetric(m)}
+                    variant="solid"
+                    style={{ fontFamily: 'Roboto,sans-serif'}}
+                    >
+                    {m === 'hotRun' ? 'Hot Run' : 'Cold Run'}
+                    </Chip>
+                ))}
             </Box>
         )}
 
@@ -353,37 +446,74 @@ function ReCharts() {
             selectedMetric
         ) && (
             <Box sx={{ display: 'flex', gap: 1, mt: 2 }}>
-            <span>Data Format:</span>
-            {['comparison', 'raw'].map((d) => (
-                <Chip
-                key={d}
-                color={dataType === d ? 'success' : 'neutral'}
-                onClick={() => setDataType(d)}
-                variant="solid"
+                <Typography variant="body1" sx={{color: 'text.primary', marginRight: 1 }}>
+                    Data Format
+                <IconButton
+                    aria-label="info"
+                    sx={{
+                        color: '#5bc0de', 
+                        width: '30px', 
+                        height: '20px', 
+                        fontSize: '20px', 
+                    }}
+                    onClick={(e) => {
+                        // You can also toggle the tooltip on click if needed
+                        // For example, using a state to control visibility
+                    }}
                 >
-                {d === 'comparison' ? 'Comparison' : 'Raw'}
-                </Chip>
-            ))}
+                    <InfoIcon sx={{ fontSize: '20px' }}/>
+                </IconButton>:
+                </Typography>
+                {['raw', 'comparison'].map((d) => (
+                    <Chip
+                    key={d}
+                    color={dataType === d ? 'success' : 'neutral'}
+                    onClick={() => setDataType(d)}
+                    variant="solid"
+                    style={{ fontFamily: 'Roboto,sans-serif'}}
+                    >
+                    {d === 'raw' ? 'Raw' : 'Comparison'}
+                    </Chip>
+                ))}
             </Box>
         )}
 
         {/* Query selector */}
         {selectedMetric === 'query_times' && (
             <Box sx={{ display: 'flex', gap: 1, mt: 2, flexWrap: 'wrap' }}>
-                <span>Query Number:</span>
+                <Typography variant="body1" sx={{color: 'text.primary', marginRight: 1 }}>
+                    Query #
+                <IconButton
+                    aria-label="info"
+                    sx={{
+                        color: '#5bc0de', 
+                        width: '30px', 
+                        height: '20px', 
+                        fontSize: '20px', 
+                    }}
+                    onClick={(e) => {
+                        // You can also toggle the tooltip on click if needed
+                        // For example, using a state to control visibility
+                    }}
+                >
+                    <InfoIcon sx={{ fontSize: '20px' }}/>
+                </IconButton>:
+                </Typography>
                 <Chip
                 color={selectedQuery === -1 ? 'success' : 'neutral'}
                 onClick={() => setSelectedQuery(-1)} // -1 for average
                 variant="solid"
+                style={{ fontFamily: 'Roboto,sans-serif'}}
                 >
                 Average
                 </Chip>
-                {Array.from({ length: 13 }).map((_, i) => (
+                {Array.from({ length: queryLength }).map((_, i) => (
                 <Chip
                     key={i}
                     color={selectedQuery === i ? 'success' : 'neutral'}
                     onClick={() => setSelectedQuery(i)}
                     variant="solid"
+                    style={{ fontFamily: 'Roboto,sans-serif'}}
                 >
                     Q{i + 1}
                 </Chip>
@@ -393,44 +523,104 @@ function ReCharts() {
 
 
       <Box mt={2}>
-        <span>Workload Used: {benchmarkWorkload}</span>
-      </Box>
-
-      <Box textAlign="center" mt={2}>
-        <Typography level="h3">
-          {getSeriesLabel(selectedMetric)}
+      <Typography variant="body1" sx={{color: 'text.primary', marginRight: 1 }}>
+                Workload Used
+        <IconButton
+            aria-label="info"
+            sx={{
+                color: '#5bc0de',
+                width: '30px', 
+                height: '20px', 
+                fontSize: '20px', 
+            }}
+            onClick={(e) => {
+                // You can also toggle the tooltip on click if needed
+                // For example, using a state to control visibility
+            }}
+        >
+            <InfoIcon sx={{ fontSize: '20px' }}/>
+        </IconButton>: <b>{benchmarkWorkload}</b>
         </Typography>
       </Box>
 
+        <Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+            <Typography level="h3" sx={{color: 'text.primary', marginRight: 1 }}>
+                {getSeriesLabel(selectedMetric)}
+            <IconButton
+                aria-label="info"
+                sx={{
+                    color: '#5bc0de',
+                    width: '30px',
+                    height: '20px',
+                    fontSize: '20px',
+                }}
+                onClick={(e) => {
+                    // You can also toggle the tooltip on click if needed
+                    // For example, using a state to control visibility
+                }}
+            >
+                <InfoIcon sx={{ fontSize: '20px' }}/>
+            </IconButton>
+            </Typography>
+        </Box>
       {loading ? (
         <Box textAlign="center" mt={4}>Loading data…</Box>
       ) : chartData.length ? (
-        <ResponsiveContainer width="100%" height={600}>
-          <BarChart data={chartData} margin={{ top: 40, bottom: 40 }}>
-            <XAxis dataKey="target"/>
-            <YAxis />
-            <Tooltip formatter={(v: number) => v.toFixed(2)} />
-            <Bar 
-                dataKey="value" 
-                isAnimationActive={false}
+        <Box display="flex" alignItems="center">
+            {(selectedMetric === 'compressionRatio' || selectedMetric === 'ingestionSpeed' || dataType === 'comparison') ? (<Box 
+                style={{ 
+                    writingMode: 'vertical-rl', 
+                    transform: 'rotate(180deg)', 
+                    marginRight: '2px', 
+                    fontFamily: 'Roboto', 
+                    fontSize: '20px', 
+                    textAlign: 'left', 
+                }}
             >
-                {chartData.map((entry, index) => (
-                    <Cell
-                    key={`cell-${index}`}
-                    fill={colorMapping[entry.target] || '#8884d8'}
-                    />
-                ))}
-                <LabelList
-                    dataKey="value"
-                    position="top"
-                    style={{ fontSize: 32, fontWeight: 'bold' }} 
-                    formatter={(v: number) =>
-                    getBarLabel(selectedMetric, dataType, v)
-                    }
-                />
-            </Bar>
-          </BarChart>
-        </ResponsiveContainer>
+                <text>
+                    <b>Worse&emsp;&lArr;</b>
+                    &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+                    <b>&rArr;&emsp; Better</b>     
+                </text>
+            </Box>): (<Box 
+                style={{ 
+                    writingMode: 'vertical-rl', 
+                    transform: 'rotate(180deg)', 
+                    marginRight: '2px', 
+                    fontFamily: 'Roboto', 
+                    fontSize: '20px', 
+                    textAlign: 'left', 
+                }}
+            >
+                <text>
+                    <b>Better&emsp;&lArr;</b>
+                    &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+                    <b>&rArr;&emsp;Worse</b>     
+                </text>
+            </Box>)}
+            <Box className="chart-container"> {/* Chart container */}
+                <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={chartData} margin={{ top: 40, bottom: 40, left:-20, }}>
+                        <XAxis style={{ fontFamily: 'Roboto' }} dataKey="target" />
+                        <YAxis 
+                            style={{ fontFamily: 'Roboto'}}>
+                        </YAxis>
+                        <Tooltip formatter={(v: number) => v.toFixed(2)} />
+                        <Bar dataKey="value" isAnimationActive={false}>
+                            {chartData.map((entry, index) => (
+                                <Cell key={`cell-${index}`} fill={colorMapping[entry.target] || '#8884d8'} />
+                            ))}
+                            <LabelList
+                                dataKey="value"
+                                position="top"
+                                style={{ fontSize: 32, fontWeight: 'bold', fill: '#4a4a4a' , fontFamily: 'Roboto' }}
+                                formatter={(v: number) => getBarLabel(selectedMetric, dataType, v)}
+                            />
+                        </Bar>
+                    </BarChart>
+                </ResponsiveContainer>
+            </Box>
+            </Box>
       ) : (
         <Box textAlign="center" mt={4}>
           No data available for the selected type and metric.
