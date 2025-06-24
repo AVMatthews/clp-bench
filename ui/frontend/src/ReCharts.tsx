@@ -51,7 +51,7 @@ const getSeriesLabel = (metric: string) => {
   const map: Record<string, string> = {
     compressionRatio:
       'Compression Ratio',
-    ingestion_speed: 'Ingestion Speed',
+    ingestionSpeed: 'Ingestion Speed',
     avg_ingest_mem: 'Ingestion Memory Usage',
     avg_query_mem: 'Search Memory Usage',
     query_times: 'Query Latency',
