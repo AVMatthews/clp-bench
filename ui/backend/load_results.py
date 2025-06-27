@@ -23,6 +23,8 @@ print(type_dirs)
 results = []
 # Iterate over assets/ and get results automatically
 for type_dir in type_dirs:
+    if "results" == type_dir or ".DS_Store" == type_dir:
+        continue
     type_path = os.path.join(assets_dir, type_dir)
     print(type_path)
     target_dirs = os.listdir(type_path)

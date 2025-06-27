@@ -1,0 +1,231 @@
+{
+    "target": "parquetnormalized",
+    "targetDisplayedName": "Parquet (normalized)",
+    "type": 2,
+    "datasets": [
+        {
+            "dataset": "MongoDB",
+            "ingestTime": 5219964,
+            "compressedSize": 1178418343,
+            "avgIngestMem": 26567591,
+            "metrics": [
+                {
+                    "metric": 1,
+                    "avgQueryMem": null,
+                    "queryTimes": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                    ]
+                },
+                {
+                    "metric": 2,
+                    "avgQueryMem": null,
+                    "queryTimes": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                    ]
+                }
+            ]
+        },
+        {
+            "dataset": "Elasticsearch",
+            "ingestTime": 204264,
+            "compressedSize": 61363515,
+            "avgIngestMem": 26190023,
+            "metrics": [
+                {
+                    "metric": 1,
+                    "avgQueryMem": null,
+                    "queryTimes": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                    ]
+                },
+                {
+                    "metric": 2,
+                    "avgQueryMem": null,
+                    "queryTimes": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                    ]
+                }
+            ]
+        },
+        {
+            "dataset": "CockroachDB",
+            "ingestTime": 355734,
+            "compressedSize": 406183987,
+            "avgIngestMem": 26269551,
+            "metrics": [
+                {
+                    "metric": 1,
+                    "avgQueryMem": null,
+                    "queryTimes": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                    ]
+                },
+                {
+                    "metric": 2,
+                    "avgQueryMem": null,
+                    "queryTimes": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                    ]
+                }
+            ]
+        },
+        {
+            "dataset": "PostgreSQL",
+            "ingestTime": 180743,
+            "compressedSize": 11843010,
+            "avgIngestMem": 26049080,
+            "metrics": [
+                {
+                    "metric": 1,
+                    "avgQueryMem": null,
+                    "queryTimes": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                    ]
+                },
+                {
+                    "metric": 2,
+                    "avgQueryMem": null,
+                    "queryTimes": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                    ]
+                }
+            ]
+        },
+        {
+            "dataset": "spark-event-logs",
+            "ingestTime": 204264,
+            "compressedSize": 132466654,
+            "avgIngestMem": 26190023,
+            "metrics": [
+                {
+                    "metric": 1,
+                    "avgQueryMem": null,
+                    "queryTimes": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                    ]
+                },
+                {
+                    "metric": 2,
+                    "avgQueryMem": null,
+                    "queryTimes": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                    ]
+                }
+            ]
+        },
+        {
+            "dataset": "Hadoop",
+            "ingestTime": null,
+            "compressedSize": null,
+            "avgIngestMem": null,
+            "metrics": [
+                {
+                    "metric": 1,
+                    "avgQueryMem": null,
+                    "queryTimes": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                    ]
+                },
+                {
+                    "metric": 2,
+                    "avgQueryMem": null,
+                    "queryTimes": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                    ]
+                }
+            ]
+        },
+        {
+            "dataset": "Average",
+            "ingestTime": 1232993,
+            "compressedSize": 358055101,
+            "avgIngestMem": 26253253,
+            "metrics": [
+                {
+                    "metric": 1,
+                    "avgQueryMem": null,
+                    "queryTimes": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                    ]
+                },
+                {
+                    "metric": 2,
+                    "avgQueryMem": null,
+                    "queryTimes": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                    ]
+                }
+            ]
+        }
+    ]
+}

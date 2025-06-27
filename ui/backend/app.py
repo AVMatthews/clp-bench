@@ -28,13 +28,8 @@ class BenchmarkingResult(db.Model):
     target_displayed_name: Mapped[str] = mapped_column(nullable=False)
     """The name of the benchmarked tool which will be displayed in the UI
     """
-    displayed_order: Mapped[int] = mapped_column(nullable=False)
-    """The order of displayed results. The smaller the value is, the lefter the result (column) 
-    will be
-    """
-    is_enable: Mapped[bool] = mapped_column(nullable=False)
-    """A switch of result, typically should be True
-    """
+    dataset: Mapped[str] = mapped_column(nullable=False)
+    """The name of the dataset being benchmarked"""
     type: Mapped[int] = mapped_column(nullable=False)
     """The type of the results, type-0: debug, type-1: unstructured, type-2: dynamically-structured
     """
@@ -57,7 +52,7 @@ class BenchmarkingResult(db.Model):
     """The end-to-end latencies of queries executed during benchmarking, the unit is millisecond
     """
 
-    __table_args__ = (UniqueConstraint("target", "type", "metric", name="uix_target_type_metric"),)
+    __table_args__ = (UniqueConstraint("target", "dataset", "type", "metric", name="uix_target_type_metric"),)
 
 
 def _define_routes(base_path: str):
@@ -71,11 +66,11 @@ def _define_routes(base_path: str):
         :return: The status of the request
         """
         data = request.json
+        print(data)
         new_benchmarking_result = BenchmarkingResult(
             target=data["target"],
             target_displayed_name=data["target_displayed_name"],
-            displayed_order=data["displayed_order"],
-            is_enable=data["is_enable"],
+            dataset=data["dataset"],
             type=data["type"],
             metric=data["metric"],
             ingest_time=data["ingest_time"],
@@ -85,50 +80,23 @@ def _define_routes(base_path: str):
             query_times=data["query_times"],
         )
         query = db.select(BenchmarkingResult)
-        query = query.filter_by(target=data["target"])
-        query = query.filter_by(type=data["type"])
-        query = query.filter_by(metric=data["metric"])
+        query = db.select(BenchmarkingResult).filter_by(
+            target=data["target"],
+            dataset=data["dataset"],
+            type=data["type"],
+            metric=data["metric"]
+        )
         existed_benchmarking_result: BenchmarkingResult = (
             db.session.execute(query).scalars().first()
         )
         if existed_benchmarking_result:
-            if existed_benchmarking_result.target != new_benchmarking_result.target:
-                existed_benchmarking_result.target = new_benchmarking_result.target
-            if (
-                existed_benchmarking_result.target_displayed_name
-                != new_benchmarking_result.target_displayed_name
-            ):
-                existed_benchmarking_result.target_displayed_name = (
-                    new_benchmarking_result.target_displayed_name
-                )
-            if (
-                existed_benchmarking_result.displayed_order
-                != new_benchmarking_result.displayed_order
-            ):
-                existed_benchmarking_result.displayed_order = (
-                    new_benchmarking_result.displayed_order
-                )
-            if existed_benchmarking_result.is_enable != new_benchmarking_result.is_enable:
-                existed_benchmarking_result.is_enable = new_benchmarking_result.is_enable
-            if existed_benchmarking_result.type != new_benchmarking_result.type:
-                existed_benchmarking_result.type = new_benchmarking_result.type
-            if existed_benchmarking_result.metric != new_benchmarking_result.metric:
-                existed_benchmarking_result.metric = new_benchmarking_result.metric
-            if existed_benchmarking_result.ingest_time != new_benchmarking_result.ingest_time:
-                existed_benchmarking_result.ingest_time = new_benchmarking_result.ingest_time
-            if (
-                existed_benchmarking_result.compressed_size
-                != new_benchmarking_result.compressed_size
-            ):
-                existed_benchmarking_result.compressed_size = (
-                    new_benchmarking_result.compressed_size
-                )
-            if existed_benchmarking_result.avg_ingest_mem != new_benchmarking_result.avg_ingest_mem:
-                existed_benchmarking_result.avg_ingest_mem = new_benchmarking_result.avg_ingest_mem
-            if existed_benchmarking_result.avg_query_mem != new_benchmarking_result.avg_query_mem:
-                existed_benchmarking_result.avg_query_mem = new_benchmarking_result.avg_query_mem
-            if existed_benchmarking_result.query_times != new_benchmarking_result.query_times:
-                existed_benchmarking_result.query_times = new_benchmarking_result.query_times
+            # Update existing record
+            existed_benchmarking_result.target_displayed_name = new_benchmarking_result.target_displayed_name
+            existed_benchmarking_result.ingest_time = new_benchmarking_result.ingest_time
+            existed_benchmarking_result.compressed_size = new_benchmarking_result.compressed_size
+            existed_benchmarking_result.avg_ingest_mem = new_benchmarking_result.avg_ingest_mem
+            existed_benchmarking_result.avg_query_mem = new_benchmarking_result.avg_query_mem
+            existed_benchmarking_result.query_times = new_benchmarking_result.query_times
         else:
             db.session.add(new_benchmarking_result)
         db.session.commit()
@@ -144,6 +112,7 @@ def _define_routes(base_path: str):
             any specified query arguments
         """
         target = request.args.get("target")
+        dataset = request.args.get("dataset")
         type = request.args.get("type")
         metric = request.args.get("metric")
         results = []
@@ -154,6 +123,8 @@ def _define_routes(base_path: str):
         # Dynamically apply filters only if the parameter is provided
         if target:
             query = query.filter_by(target=target)
+        if dataset:
+            query = query.filter_by(dataset=dataset) 
         if type:
             query = query.filter_by(type=type)
         if metric:
@@ -166,8 +137,7 @@ def _define_routes(base_path: str):
                     {
                         "target": row.target,
                         "target_displayed_name": row.target_displayed_name,
-                        "displayed_order": row.displayed_order,
-                        "is_enable": row.is_enable,
+                        "dataset": row.dataset,
                         "type": row.type,
                         "metric": row.metric,
                         "ingest_time": row.ingest_time,
@@ -179,6 +149,17 @@ def _define_routes(base_path: str):
                 )
 
         return jsonify({"message": "success", "payload": results}), 201
+    
+    @app.route(f"{base_path}/api/clear", methods=["DELETE"])
+    def clear_database() -> Tuple[Response, int]:
+        """This function clears all records from the BenchmarkingResult table."""
+        try:
+            db.session.query(BenchmarkingResult).delete()
+            db.session.commit()
+            return jsonify({"message": "Database cleared successfully."}), 200
+        except Exception as e:
+            db.session.rollback()
+            return jsonify({"message": "Error clearing database.", "error": str(e)}), 500
 
 
 if __name__ == "__main__":
@@ -199,6 +180,7 @@ if __name__ == "__main__":
     db.init_app(app)
     _define_routes(vite_frontend_base_path)
     with app.app_context():
+        db.drop_all() 
         db.create_all()
     app.run(
         host=os.getenv("VITE_BACKEND_HOST", "127.0.0.1"), port=os.getenv("VITE_BACKEND_PORT", 5000)

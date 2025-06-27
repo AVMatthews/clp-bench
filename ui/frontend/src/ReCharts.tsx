@@ -1,7 +1,7 @@
 import './App.css';
 import logo from './assets/clp-logo.png';
 import { useEffect, useState } from 'react';
-import { Box, Chip, Link, Tooltip as JoyTooltip, Typography } from '@mui/joy';
+import { Box, Chip, Link, Stack, Table, Tooltip as JoyTooltip, Typography } from '@mui/joy';
 import Divider, { dividerClasses } from '@mui/material/Divider';
 import InfoIcon from '@mui/icons-material/Info';
 import IconButton from '@mui/material/IconButton';
@@ -13,12 +13,39 @@ import {
   XAxis,
   YAxis,
   Tooltip,
+  Text,
   LabelList,
-  Label,
 } from 'recharts';
 
 const TYPE = ['', 'unstructured', 'json'];
 const METRIC = ['', 'hotRun', 'coldRun'];
+const JSONDATASETS = ['Average', 'MongoDB', 'Elasticsearch', 'CockroachDB', 'PostgreSQL', 'spark-event-logs'];
+
+const iconButtonStyle= {
+    color: '#5bc0de', 
+    width: '30px', 
+    height: '20px', 
+    fontSize: '20px', 
+}
+const infoIconStyle = {
+    fontSize: '20px',
+}
+
+const selectorStyle = {
+    fontFamily: 'Roboto,sans-serif',
+    fontSize: '16px',
+    color: 'text.primary', 
+    marginRight: 1,
+}
+
+const yaxisLabelStyle = {
+    writingMode: 'vertical-rl', 
+    transform: 'rotate(180deg)', 
+    marginRight: '2px', 
+    fontFamily: 'Roboto', 
+    fontSize: '18px', 
+    textAlign: 'left', 
+}
 
 type BenchmarkingResultBasic<T> = {
   [type: string]: { [metric: string]: T };
@@ -63,12 +90,14 @@ const getBarLabel = (metric: string, dataType: string, value: number) => {
   let suffix = '';
   if (metric === 'ingestionSpeed'){
     suffix = ' MB/s';
+    return value.toFixed(0) + suffix;
   } else if ((metric === 'avg_ingest_mem' || metric === 'avg_query_mem') && dataType === 'raw') {
     suffix = ' GB';
   } else if (metric === 'query_times' && dataType === 'raw') {
     suffix = 's';
   }else if (metric === 'compressionRatio') {
     suffix = ' : 1';
+    return value.toFixed(0) + suffix;
   }else{
     suffix = 'x';
   }
@@ -76,7 +105,7 @@ const getBarLabel = (metric: string, dataType: string, value: number) => {
   if ( value < 1){
     return value.toFixed(2) + suffix;
   }else {
-    console.log(value);
+    //console.log(value);
     if  ((value % 1) < 0.05 || (value % 1) > 0.95) {
         return value.toFixed(0) + suffix;
     }
@@ -85,28 +114,42 @@ const getBarLabel = (metric: string, dataType: string, value: number) => {
 };
 
 const colorMapping: Record<string, string> = {
-  CLP: '#00C7BD',
-  'CLP-S': '#00C7BD',
-  Splunk: '#E20082',
-  Elasticsearch: '#008EC2',
-  Loki: '#A4A4A4',
-  grep: '#2DE109',
-  ClickHouse: '#F0B400',
-  'ClickHouse (JSON)': '#FFDD1A',
-  MongoDB: '#008535',
-  OpenObserve: '#8A14FF',
-  'OpenObserve (w/ LIMIT)': '#BD7AFF',
+    CLP: '#00C7BD', //Teal
+    //'CLP (--disable-log-order)': '#009e96', //Teal
+    Splunk: '#E20082',//Pink
+    Elasticsearch: '#008EC2', //Light Blue
+    Loki: '#A4A4A4',//Grey
+    grep: '#2DE109',//Terminal Green
+    'ClickHouse (JSON string)': '#F0B400', //Dark Yellow
+    'ClickHouse (native json)': '#FFDD1A', //Light Yellow
+    MongoDB: '#008535', //Green
+    OpenObserve: '#8A14FF', //Dark Purple
+    //'OpenObserve (single-threaded)': '#BD7AFF', //Light Purple
+    //'Presto + Hive + Parquet (snappy) (JSON string)': '#cc5800',
+    'Presto Parquet (json string)': '#ff7105',
+    'Presto Parquet (pairwise arrays)': '#ff9a4d',
+    'Spark SQL Parquet (normalized)': '#d60000', //Red
+    'Parquet (json string)': '#ff7105',
+    'Parquet (pairwise arrays)': '#ff9a4d',
+    'Parquet (normalized)': '#d60000', //Red
+    //'SparkSQL (single-threaded)': '#ff4d4d', //Light Red
+
 };
 
 const TARGET_ORDER = [
     'CLP',
-    'CLP-S',
+    'CLP (--disable-log-order)',
     'Elasticsearch',
     'Splunk',
     'ClickHouse',
-    'ClickHouse (JSON)',
+    'ClickHouse (native JSON)',
     'OpenObserve',
-    'OpenObserve (w/ LIMIT)',
+    'OpenObserve (single-threaded)',
+    'Presto + Hive + Parquet (snappy) (JSON string)',
+    'Presto + Hive + Parquet (zstd) (JSON string)',
+    'Presto + Hive + Parquet (zstd) (column-value)',
+    'SparkSQL (multi-threaded)',
+    'SparkSQL (single-threaded)',
     'MongoDB',
     'Loki',
     'grep',
@@ -120,9 +163,28 @@ const metricOptions = [
     'ingestionSpeed',
 ];
 
+const CustomXAxisTick = ({ x, y, payload }: any) => {
+    if (payload && payload.value) {
+      return (
+        <Text
+            className='xaxis-label'
+            width={80} // Adjust width as needed
+            x={x} 
+            y={y} 
+            textAnchor="middle"
+            style={{ fontFamily: 'Roboto,sans-serif', fill: '#4a4a4a' }}
+            verticalAnchor="start"
+            angle={0}
+        >{payload.value}</Text>
+      );
+    }
+    return null;
+};
+
 function ReCharts() {
   const [type, setType] = useState(TYPE[2]);
   const [metric, setMetric] = useState(METRIC[1]);
+  const [dataset, setDataset] = useState('Average');
   const [selectedMetric, setSelectedMetric] = useState('compressionRatio');
   const [selectedQuery, setSelectedQuery] = useState(0);
   const [allTargets, setAllTargets] = useState<string[]>([]);
@@ -154,15 +216,20 @@ function ReCharts() {
         setBenchmarkWorkload(
           BENCHMARK_WORKLOAD[type][metric].name
         );
+        //console.log("Type: ", TYPE.indexOf(type))
+        //console.log("Metric: ", METRIC.indexOf(metric))
+        //console.log("Dataset", dataset)
+        //console.log(result.payload)
 
         let data = result.payload
           .filter(
             (i) =>
               i.type === TYPE.indexOf(type) &&
               i.metric === METRIC.indexOf(metric) &&
-              i.is_enable
+              i.dataset === dataset
           )
           .map((item) => {
+            //console.log(item)
             let value = 0;
             const Q = (qs: string) =>
               qs
@@ -220,7 +287,7 @@ function ReCharts() {
           selectedTargets.includes(d.target)
         );
 
-        console.log(dataType);
+        //console.log(dataType);
 
         if (
           ['avg_ingest_mem', 'avg_query_mem', 'query_times'].includes(
@@ -256,7 +323,8 @@ function ReCharts() {
     selectedMetric,
     selectedQuery,
     selectedTargets.join(','),
-    dataType
+    dataType,
+    dataset
   ]);
 
   return (
@@ -289,319 +357,66 @@ function ReCharts() {
             CLP Documentation
             </Link>
         </Box>
+        
 
-        {/* Type selector */}
-        <Box sx={{ display: 'flex', gap: 1, mt: 2 }}>
-            <Typography variant="body1" sx={{color: 'text.primary', marginRight: 1 }}>
-                Log Format
-                <JoyTooltip title="Information about Log Type" arrow>
-                <IconButton
-                    aria-label="info"
-                    sx={{
-                        color: '#5bc0de', 
-                        width: '30px', 
-                        height: '20px', 
-                        fontSize: '20px', 
-                    }}
-                    onClick={(e) => {
-                        // You can also toggle the tooltip on click if needed
-                        // For example, using a state to control visibility
-                    }}
-                >
-                    <InfoIcon sx={{ fontSize: '20px' }}/>
-                </IconButton>
-                </JoyTooltip>
-                :
-            </Typography>
-            {['json', 'unstructured'].map((t) => (
-            <Chip
-                key={t}
-                color={type === t ? 'success' : 'neutral'}
-                onClick={() => setType(t)}
-                variant="solid"
-                style={{ fontFamily: 'Roboto,sans-serif'}}
-            >
-                {t === 'json'
-                ? 'JSON'
-                : 'Unstructured'}
-            </Chip>
-            ))}
-        </Box>
-
-        {/* Tools */}
-        <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mt: 2 }}>
-        <Typography variant="body1" sx={{color: 'text.primary', marginRight: 1 }}>
-                Tools
+        {((type === 'json' && (selectedMetric === 'query_times' || selectedMetric === 'avg_query_mem'))|| type === 'unstructured') && (
+        <Box>
+            <Typography sx={selectorStyle}>
+                    Dataset
             <IconButton
-                aria-label="info"
-                sx={{
-                    color: '#5bc0de', 
-                    width: '30px', 
-                    height: '20px', 
-                    fontSize: '20px', 
-                }}
+                sx={iconButtonStyle}
                 onClick={(e) => {
                     // You can also toggle the tooltip on click if needed
                     // For example, using a state to control visibility
                 }}
             >
-                <InfoIcon sx={{ fontSize: '20px' }}/>
-            </IconButton>:
+                <InfoIcon sx={infoIconStyle}/>
+            </IconButton>: <b>{benchmarkWorkload}</b>
             </Typography>
-            {[...allTargets]
-                .sort((a, b) => TARGET_ORDER.indexOf(a) - TARGET_ORDER.indexOf(b))
-                .map(target => (
-            <Chip
-                key={target}
-                color={selectedTargets.includes(target) ? 'success' : 'neutral'}
-                onClick={() =>
-                setSelectedTargets((prev) =>
-                    prev.includes(target)
-                    ? prev.filter((x) => x !== target)
-                    : [...prev, target]
-                )
-                }
-                variant="solid"
-                style={{ fontFamily: 'Roboto,sans-serif'}}
-            >
-                {target}
-            </Chip>
-            ))}
         </Box>
-
-        {/* Metric selector */}
-        <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mt: 2 }}>
-        <Typography variant="body1" sx={{color: 'text.primary', marginRight: 1 }}>
-                Metric
-            <IconButton
-                aria-label="info"
-                sx={{
-                    color: '#5bc0de', 
-                    width: '30px', 
-                    height: '20px', 
-                    fontSize: '20px', 
-                }}
-                onClick={(e) => {
-                    // You can also toggle the tooltip on click if needed
-                    // For example, using a state to control visibility
-                }}
-            >
-                <InfoIcon sx={{ fontSize: '20px' }}/>
-            </IconButton>:
-            </Typography>
-            {metricOptions.map((m) => (
-            <Chip
-                key={m}
-                color={selectedMetric === m ? 'success' : 'neutral'}
-                onClick={() => {
-                setSelectedMetric(m);
-                setSelectedQuery(-1);
-                }}
-                variant="solid"
-                style={{ fontFamily: 'Roboto,sans-serif'}}
-            >
-                {getSeriesLabel(m)}
-            </Chip>
-            ))}
-        </Box>
-
-        {/* Hot/cold runs */}
-        {['avg_query_time', 'avg_query_mem', 'query_times'].includes(
-            selectedMetric
-        ) && (
-            <Box sx={{ display: 'flex', gap: 1, mt: 2 }}>
-                <Typography variant="body1" sx={{color: 'text.primary', marginRight: 1 }}>
-                    Run Type
-                <IconButton
-                    aria-label="info"
-                    sx={{
-                        color: '#5bc0de', 
-                        width: '30px', 
-                        height: '20px', 
-                        fontSize: '20px', 
-                    }}
-                    onClick={(e) => {
-                        // You can also toggle the tooltip on click if needed
-                        // For example, using a state to control visibility
-                    }}
-                >
-                    <InfoIcon sx={{ fontSize: '20px' }}/>
-                </IconButton>:
-                </Typography>
-                {['hotRun', 'coldRun'].map((m) => (
-                    <Chip
-                    key={m}
-                    color={metric === m ? 'success' : 'neutral'}
-                    onClick={() => setMetric(m)}
-                    variant="solid"
-                    style={{ fontFamily: 'Roboto,sans-serif'}}
-                    >
-                    {m === 'hotRun' ? 'Hot Run' : 'Cold Run'}
-                    </Chip>
-                ))}
-            </Box>
         )}
-
-        {['avg_query_mem', 'avg_ingest_mem', 'query_times'].includes(
-            selectedMetric
-        ) && (
-            <Box sx={{ display: 'flex', gap: 1, mt: 2 }}>
-                <Typography variant="body1" sx={{color: 'text.primary', marginRight: 1 }}>
-                    Data Format
-                <IconButton
-                    aria-label="info"
-                    sx={{
-                        color: '#5bc0de', 
-                        width: '30px', 
-                        height: '20px', 
-                        fontSize: '20px', 
-                    }}
-                    onClick={(e) => {
-                        // You can also toggle the tooltip on click if needed
-                        // For example, using a state to control visibility
-                    }}
-                >
-                    <InfoIcon sx={{ fontSize: '20px' }}/>
-                </IconButton>:
-                </Typography>
-                {['raw', 'comparison'].map((d) => (
-                    <Chip
-                    key={d}
-                    color={dataType === d ? 'success' : 'neutral'}
-                    onClick={() => setDataType(d)}
-                    variant="solid"
-                    style={{ fontFamily: 'Roboto,sans-serif'}}
-                    >
-                    {d === 'raw' ? 'Raw' : 'Comparison'}
-                    </Chip>
-                ))}
-            </Box>
-        )}
-
-        {/* Query selector */}
-        {selectedMetric === 'query_times' && (
-            <Box sx={{ display: 'flex', gap: 1, mt: 2, flexWrap: 'wrap' }}>
-                <Typography variant="body1" sx={{color: 'text.primary', marginRight: 1 }}>
-                    Query #
-                <IconButton
-                    aria-label="info"
-                    sx={{
-                        color: '#5bc0de', 
-                        width: '30px', 
-                        height: '20px', 
-                        fontSize: '20px', 
-                    }}
-                    onClick={(e) => {
-                        // You can also toggle the tooltip on click if needed
-                        // For example, using a state to control visibility
-                    }}
-                >
-                    <InfoIcon sx={{ fontSize: '20px' }}/>
-                </IconButton>:
-                </Typography>
-                <Chip
-                color={selectedQuery === -1 ? 'success' : 'neutral'}
-                onClick={() => setSelectedQuery(-1)} // -1 for average
-                variant="solid"
-                style={{ fontFamily: 'Roboto,sans-serif'}}
-                >
-                Average
-                </Chip>
-                {Array.from({ length: queryLength }).map((_, i) => (
-                <Chip
-                    key={i}
-                    color={selectedQuery === i ? 'success' : 'neutral'}
-                    onClick={() => setSelectedQuery(i)}
-                    variant="solid"
-                    style={{ fontFamily: 'Roboto,sans-serif'}}
-                >
-                    Q{i + 1}
-                </Chip>
-                ))}
-            </Box>
-        )}
-
-
-      <Box mt={2}>
-      <Typography variant="body1" sx={{color: 'text.primary', marginRight: 1 }}>
-                Workload Used
-        <IconButton
-            aria-label="info"
-            sx={{
-                color: '#5bc0de',
-                width: '30px', 
-                height: '20px', 
-                fontSize: '20px', 
-            }}
-            onClick={(e) => {
-                // You can also toggle the tooltip on click if needed
-                // For example, using a state to control visibility
-            }}
-        >
-            <InfoIcon sx={{ fontSize: '20px' }}/>
-        </IconButton>: <b>{benchmarkWorkload}</b>
-        </Typography>
-      </Box>
 
         <Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-            <Typography level="h3" sx={{color: 'text.primary', marginRight: 1 }}>
+            <Typography level="h4" sx={{color: 'text.primary', marginRight: 1 }}>
                 {getSeriesLabel(selectedMetric)}
             <IconButton
-                aria-label="info"
-                sx={{
-                    color: '#5bc0de',
-                    width: '30px',
-                    height: '20px',
-                    fontSize: '20px',
-                }}
+                sx={iconButtonStyle}
                 onClick={(e) => {
                     // You can also toggle the tooltip on click if needed
                     // For example, using a state to control visibility
                 }}
             >
-                <InfoIcon sx={{ fontSize: '20px' }}/>
+                <InfoIcon sx={infoIconStyle}/>
             </IconButton>
             </Typography>
         </Box>
+
+
       {loading ? (
         <Box textAlign="center" mt={4}>Loading data…</Box>
       ) : chartData.length ? (
         <Box display="flex" alignItems="center">
             {(selectedMetric === 'compressionRatio' || selectedMetric === 'ingestionSpeed' || dataType === 'comparison') ? (<Box 
-                style={{ 
-                    writingMode: 'vertical-rl', 
-                    transform: 'rotate(180deg)', 
-                    marginRight: '2px', 
-                    fontFamily: 'Roboto', 
-                    fontSize: '20px', 
-                    textAlign: 'left', 
-                }}
+                style={yaxisLabelStyle}
             >
                 <text>
-                    <b>Worse&emsp;&lArr;</b>
-                    &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+                    &emsp;&emsp;&emsp;<b>Worse&emsp;&lArr;</b>
+                    &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
                     <b>&rArr;&emsp; Better</b>     
                 </text>
             </Box>): (<Box 
-                style={{ 
-                    writingMode: 'vertical-rl', 
-                    transform: 'rotate(180deg)', 
-                    marginRight: '2px', 
-                    fontFamily: 'Roboto', 
-                    fontSize: '20px', 
-                    textAlign: 'left', 
-                }}
+                style={yaxisLabelStyle}
             >
                 <text>
-                    <b>Better&emsp;&lArr;</b>
-                    &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+                    &emsp;&emsp;&emsp;<b>Better&emsp;&lArr;</b>
+                    &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
                     <b>&rArr;&emsp;Worse</b>     
                 </text>
             </Box>)}
             <Box className="chart-container"> {/* Chart container */}
                 <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={chartData} margin={{ top: 40, bottom: 40, left:-20, }}>
-                        <XAxis style={{ fontFamily: 'Roboto' }} dataKey="target" />
+                    <BarChart data={chartData} margin={{ top: 40, bottom: 70, left:-20, right:60}}>
+                        <XAxis interval={0} style={{ fontFamily: 'Roboto' }} tick={<CustomXAxisTick/>} dataKey="target"/>
                         <YAxis 
                             style={{ fontFamily: 'Roboto'}}>
                         </YAxis>
@@ -613,7 +428,8 @@ function ReCharts() {
                             <LabelList
                                 dataKey="value"
                                 position="top"
-                                style={{ fontSize: 32, fontWeight: 'bold', fill: '#4a4a4a' , fontFamily: 'Roboto' }}
+                                width= {150}
+                                style={{ fontSize: '1.5vw', fontWeight: 'bold', fill: '#4a4a4a' , fontFamily: 'Roboto' }}
                                 formatter={(v: number) => getBarLabel(selectedMetric, dataType, v)}
                             />
                         </Bar>
@@ -626,6 +442,256 @@ function ReCharts() {
           No data available for the selected type and metric.
         </Box>
       )}
+
+      <Table>
+        <tbody>
+            {/* Type selector */}
+            <tr>
+                <td style={{ width: '10%' }}>
+                <Typography sx={selectorStyle}>
+                    Log Type
+                    <JoyTooltip title="Log Type" arrow>
+                    <IconButton sx={iconButtonStyle}>
+                        <InfoIcon sx={infoIconStyle}/>
+                    </IconButton>
+                    </JoyTooltip>
+                    :
+                </Typography>
+                </td>
+                <td>
+                <Stack direction="row" spacing={1}>
+                {['json', 'unstructured'].map((t) => (
+                <Chip
+                    key={t}
+                    color={type === t ? 'success' : 'neutral'}
+                    onClick={() => {
+                        setType(t)
+                        if(t === "json" && (
+                            selectedMetric === 'compressionRatio' || 
+                            selectedMetric === 'avg_ingest_mem' || 
+                            selectedMetric === 'ingestionSpeed'
+                        )){
+                            setDataset('Average')
+                        }else if (t === "json"){
+                            setDataset('MongoDB')
+                        }else{
+                            setDataset('Hadoop')
+                        }
+                    
+                    }}
+                    variant="solid"
+                    style={{ fontFamily: 'Roboto,sans-serif'}}
+                >
+                    {t === 'json'
+                    ? 'JSON'
+                    : 'Unstructured'}
+                </Chip>
+                ))}
+                </Stack>
+                </td>
+            </tr>
+
+            
+            {/* Tools */}
+            <tr>
+                <td>
+                <Typography sx={selectorStyle}>
+                        Tools
+                    <IconButton sx={iconButtonStyle}>
+                        <InfoIcon sx={infoIconStyle}/>
+                    </IconButton>:
+                </Typography>
+                </td>
+                <td>
+                <Stack direction="row" spacing={1} useFlexGap sx={{ flexWrap: 'wrap' }}>
+                {[...allTargets]
+                    .sort((a, b) => TARGET_ORDER.indexOf(a) - TARGET_ORDER.indexOf(b))
+                    .map(target => (
+                <Chip
+                    key={target}
+                    color={selectedTargets.includes(target) ? 'success' : 'neutral'}
+                    onClick={() =>
+                    setSelectedTargets((prev) =>
+                        prev.includes(target)
+                        ? prev.filter((x) => x !== target)
+                        : [...prev, target]
+                    )
+                    }
+                    variant="solid"
+                    style={{ fontFamily: 'Roboto,sans-serif'}}
+                >
+                    {target}
+                </Chip>
+                ))}
+                </Stack>
+                </td>
+            </tr>
+
+            {/* Metric selector */}
+            <tr>
+                <td>
+                <Typography sx={selectorStyle}>
+                    Metric
+                <IconButton sx={iconButtonStyle}>
+                    <InfoIcon sx={infoIconStyle}/>
+                </IconButton>:
+                </Typography>
+                </td>
+                <td>
+                <Stack direction="row" spacing={1}>
+                {metricOptions.map((m) => (
+                <Chip
+                    key={m}
+                    color={selectedMetric === m ? 'success' : 'neutral'}
+                    onClick={() => {
+                        setSelectedMetric(m);
+                        setSelectedQuery(-1);
+                        if(type === "json" && (m === 'query_times' || m ==='avg_query_mem')){
+                            setDataset("MongoDB")
+                        }
+
+                    }}
+                    variant="solid"
+                    style={{ fontFamily: 'Roboto,sans-serif'}}
+                >
+                    {getSeriesLabel(m)}
+                </Chip>
+                ))}
+                </Stack>
+                </td>
+            </tr>
+
+            {((
+                selectedMetric === 'compressionRatio' || 
+                selectedMetric === 'avg_ingest_mem' || 
+                selectedMetric === 'ingestionSpeed'
+            ) && type === 'json' ) && (
+                <tr>
+                    <td>
+                    <Typography sx={selectorStyle}>
+                        Dataset
+                    <IconButton sx={iconButtonStyle}>
+                        <InfoIcon sx={infoIconStyle}/>
+                    </IconButton>:
+                    </Typography>
+                    </td>
+                    <td>
+                    <Stack direction="row" spacing={1}>
+                    {JSONDATASETS.map((d) => (
+                        <Chip
+                        key={d}
+                        color={dataset === d ? 'success' : 'neutral'}
+                        onClick={() => setDataset(d)}
+                        variant="solid"
+                        style={{ fontFamily: 'Roboto,sans-serif'}}
+                        >
+                        {d}
+                        </Chip>
+                    ))}
+                    </Stack>
+                    </td>
+                </tr>
+            )}
+
+            {/* Hot/cold runs */}
+            {['avg_query_time', 'avg_query_mem', 'query_times'].includes(
+                selectedMetric
+            ) && (
+                <tr>
+                    <td>
+                    <Typography sx={selectorStyle}>
+                        Run Type
+                    <IconButton sx={iconButtonStyle}>
+                        <InfoIcon sx={infoIconStyle}/>
+                    </IconButton>:
+                    </Typography>
+                    </td>
+                    <td>
+                    <Stack direction="row" spacing={1}>
+                    {['hotRun', 'coldRun'].map((m) => (
+                        <Chip
+                        key={m}
+                        color={metric === m ? 'success' : 'neutral'}
+                        onClick={() => setMetric(m)}
+                        variant="solid"
+                        style={{ fontFamily: 'Roboto,sans-serif'}}
+                        >
+                        {m === 'hotRun' ? 'Hot Run' : 'Cold Run'}
+                        </Chip>
+                    ))}
+                    </Stack>
+                    </td>
+                </tr>
+            )}
+
+            {['avg_query_mem', 'avg_ingest_mem', 'query_times'].includes(
+                selectedMetric
+            ) && (
+                <tr>
+                    <td>
+                    <Typography sx={selectorStyle}>
+                        Data Format
+                    <IconButton sx={iconButtonStyle}>
+                        <InfoIcon sx={infoIconStyle}/>
+                    </IconButton>:
+                    </Typography>
+                    </td>
+                    <td>
+                    <Stack direction="row" spacing={1}>
+                    {['raw', 'comparison'].map((d) => (
+                        <Chip
+                        key={d}
+                        color={dataType === d ? 'success' : 'neutral'}
+                        onClick={() => setDataType(d)}
+                        variant="solid"
+                        style={{ fontFamily: 'Roboto,sans-serif'}}
+                        >
+                        {d === 'raw' ? 'Raw' : 'Comparison'}
+                        </Chip>
+                    ))}
+                    </Stack>
+                    </td>
+                </tr>
+            )}
+
+            {/* Query selector */}
+            {selectedMetric === 'query_times' && (
+                <tr>
+                    <td>
+                    <Typography sx={selectorStyle}>
+                        Query #
+                    <IconButton sx={iconButtonStyle}>
+                        <InfoIcon sx={infoIconStyle}/>
+                    </IconButton>:
+                    </Typography>
+                    </td>
+                    <td>
+                    <Stack direction="row" spacing={1}>
+                    <Chip
+                    color={selectedQuery === -1 ? 'success' : 'neutral'}
+                    onClick={() => setSelectedQuery(-1)} // -1 for average
+                    variant="solid"
+                    style={{ fontFamily: 'Roboto,sans-serif'}}
+                    >
+                    Average
+                    </Chip>
+                    {Array.from({ length: queryLength }).map((_, i) => (
+                    <Chip
+                        key={i}
+                        color={selectedQuery === i ? 'success' : 'neutral'}
+                        onClick={() => setSelectedQuery(i)}
+                        variant="solid"
+                        style={{ fontFamily: 'Roboto,sans-serif'}}
+                    >
+                        Q{i + 1}
+                    </Chip>
+                    ))}
+                    </Stack>
+                    </td>
+                </tr>
+            )}
+        </tbody>
+        </Table>
     </Box>
   );
 }

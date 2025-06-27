@@ -6,10 +6,19 @@
     height: 100vh; /* Full viewport height */
     padding: 20px; /* Optional padding */
     box-sizing: border-box; /* Include padding in width/height */
+    font-size: 1.2vw;
 }
 
 .chart-container {
     width: 100%; /* Full width */
-    height: 600px; /* Fixed height for the chart */
+    height: 450px; /* Fixed height for the chart */
     flex: 1; /* Allow the chart container to grow */
+}
+
+.xaxis-label {
+   font-size: 0.9vw; /* Responsive font size for x-axis labels */
+}
+
+.bar-label {
+   font-size: 2vw; /* Responsive font size for bar labels */
 }
