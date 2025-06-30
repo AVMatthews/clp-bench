@@ -33,6 +33,8 @@ class BenchmarkingResult(db.Model):
     type: Mapped[int] = mapped_column(nullable=False)
     """The type of the results, type-0: debug, type-1: unstructured, type-2: dynamically-structured
     """
+    color: Mapped[str] = mapped_column(nullable=False)
+    """Hex Color string"""
     metric: Mapped[int] = mapped_column(nullable=False)
     """The metric of the results, metric-0: debug, metric-1: hot run, metric-2: cold run
     """
@@ -48,6 +50,14 @@ class BenchmarkingResult(db.Model):
     avg_query_mem: Mapped[int] = mapped_column(nullable=True)
     """The average memory usage during executing queries, the unit is byte
     """
+    compression_ratio: Mapped[float] = mapped_column(nullable=True)
+    """Compression Ratio
+    """
+    ingestion_speed: Mapped[float] = mapped_column(nullable=True)
+    """The speed of ingestion, the unit is MB/s
+    """
+    size: Mapped[int] = mapped_column(nullable=True)
+    """Original size of the dataset"""
     query_times: Mapped[str] = mapped_column(nullable=True)
     """The end-to-end latencies of queries executed during benchmarking, the unit is millisecond
     """
@@ -72,11 +82,15 @@ def _define_routes(base_path: str):
             target_displayed_name=data["target_displayed_name"],
             dataset=data["dataset"],
             type=data["type"],
+            color=data["color"],
             metric=data["metric"],
             ingest_time=data["ingest_time"],
             compressed_size=data["compressed_size"],
             avg_ingest_mem=data["avg_ingest_mem"],
             avg_query_mem=data["avg_query_mem"],
+            compression_ratio=data["compression_ratio"],
+            ingestion_speed=data["ingestion_speed"],
+            size=data["size"],
             query_times=data["query_times"],
         )
         query = db.select(BenchmarkingResult)
@@ -92,10 +106,14 @@ def _define_routes(base_path: str):
         if existed_benchmarking_result:
             # Update existing record
             existed_benchmarking_result.target_displayed_name = new_benchmarking_result.target_displayed_name
+            existed_benchmarking_result.color = new_benchmarking_result.color
             existed_benchmarking_result.ingest_time = new_benchmarking_result.ingest_time
             existed_benchmarking_result.compressed_size = new_benchmarking_result.compressed_size
             existed_benchmarking_result.avg_ingest_mem = new_benchmarking_result.avg_ingest_mem
             existed_benchmarking_result.avg_query_mem = new_benchmarking_result.avg_query_mem
+            existed_benchmarking_result.compression_ratio = new_benchmarking_result.compression_ratio
+            existed_benchmarking_result.ingestion_speed = new_benchmarking_result.ingestion_speed
+            existed_benchmarking_result.size = new_benchmarking_result.size
             existed_benchmarking_result.query_times = new_benchmarking_result.query_times
         else:
             db.session.add(new_benchmarking_result)
@@ -139,11 +157,15 @@ def _define_routes(base_path: str):
                         "target_displayed_name": row.target_displayed_name,
                         "dataset": row.dataset,
                         "type": row.type,
+                        "color": row.color,
                         "metric": row.metric,
                         "ingest_time": row.ingest_time,
                         "compressed_size": row.compressed_size,
                         "avg_ingest_mem": row.avg_ingest_mem,
                         "avg_query_mem": row.avg_query_mem,
+                        "compression_ratio": row.compression_ratio,
+                        "ingestion_speed": row.ingestion_speed,
+                        "size": row.size,
                         "query_times": row.query_times,
                     }
                 )

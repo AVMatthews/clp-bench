@@ -22,11 +22,13 @@ def main(input_csv, output_folder):
     headers = reader[0][3:]
     displayNames = reader[1][3:]
     typesRow = reader[2][3:]
+    colorRow = reader[3][3:]
     #print(headers)
     systems = [name.strip() for name in headers]
     systemsLen = len(systems)
     systemDisplayNames = [name.strip() for name in displayNames]
     dataTypes = [parse_number(type.strip()) for type in typesRow]
+    colors = [name.strip() for name in colorRow]
     print(systems)
     # Dictionary to store system data
     #TODO: remove display order and is Enables
@@ -34,6 +36,7 @@ def main(input_csv, output_folder):
         "target": systems[i],
         "targetDisplayedName": systemDisplayNames[i],
         "type": dataTypes[i],
+        "color": colors[i],
         "datasets": []
     } for i, name in enumerate(systems)}
 
@@ -73,6 +76,9 @@ def main(input_csv, output_folder):
     ingestionTimes = []
     compressedSizes = []
     avgIngestMems = []
+    compressionRatio = []
+    ingestionSpeed = []
+    size = []
     #List w/ 1 list per dataset, each containing 6 lists for the 6 queries
     #[dataset][query][system]
     coldTimes = []
@@ -86,6 +92,9 @@ def main(input_csv, output_folder):
         ingestionTimes.append(get_row(dataset, "Ingestion time (ms)", systemsLen))
         compressedSizes.append(get_row(dataset, "Compressed size (B)", systemsLen))
         avgIngestMems.append(get_row(dataset, "Ingestion memory usage (B)", systemsLen))
+        compressionRatio.append(get_row(dataset, "Compression Ratio", systemsLen))
+        ingestionSpeed.append(get_row(dataset, "Ingestion Speed (MB/s)", systemsLen))
+        size.append(get_row(dataset, "Size (B)", systemsLen))
         # Cold queries
         coldTimes.append([get_query_row(dataset,"Cold", f"Q{i} time (ms)", systemsLen) for i in range(6)])
         coldMem.append(get_query_row(dataset, "Cold","Query memory usage (B)", systemsLen))
@@ -118,11 +127,17 @@ def main(input_csv, output_folder):
                 "ingestTime": None,
                 "compressedSize": None,
                 "avgIngestMem": None,
+                "compressionRatio": None,
+                "ingestionSpeed": None,
+                "size": None,
                 "metrics": []
             })   
             system_data[name]["datasets"][j]["ingestTime"] = parse_number(ingestionTimes[j][i])
             system_data[name]["datasets"][j]["compressedSize"] = parse_number(compressedSizes[j][i])
             system_data[name]["datasets"][j]["avgIngestMem"] = parse_number(avgIngestMems[j][i])
+            system_data[name]["datasets"][j]["compressionRatio"] = parse_number(compressionRatio[j][i])
+            system_data[name]["datasets"][j]["ingestionSpeed"] = parse_number(ingestionSpeed[j][i])
+            system_data[name]["datasets"][j]["size"] = parse_number(size[j][i])
             """ print(coldMem[j][i])
             for q in range(6):
                 print(coldTimes[j][q][i]) """

@@ -2,12 +2,16 @@
     "target": "openobserve",
     "targetDisplayedName": "OpenObserve",
     "type": 2,
+    "color": "#8A14FF",
     "datasets": [
         {
             "dataset": "MongoDB",
             "ingestTime": 6519506,
             "compressedSize": 1010516059,
             "avgIngestMem": 5281799174,
+            "compressionRatio": 68,
+            "ingestionSpeed": 10,
+            "size": 69582861765,
             "metrics": [
                 {
                     "metric": 1,
@@ -40,6 +44,9 @@
             "ingestTime": null,
             "compressedSize": null,
             "avgIngestMem": null,
+            "compressionRatio": null,
+            "ingestionSpeed": null,
+            "size": null,
             "metrics": [
                 {
                     "metric": 1,
@@ -72,6 +79,9 @@
             "ingestTime": null,
             "compressedSize": null,
             "avgIngestMem": null,
+            "compressionRatio": null,
+            "ingestionSpeed": null,
+            "size": null,
             "metrics": [
                 {
                     "metric": 1,
@@ -104,6 +114,9 @@
             "ingestTime": null,
             "compressedSize": null,
             "avgIngestMem": null,
+            "compressionRatio": null,
+            "ingestionSpeed": null,
+            "size": null,
             "metrics": [
                 {
                     "metric": 1,
@@ -136,6 +149,9 @@
             "ingestTime": null,
             "compressedSize": null,
             "avgIngestMem": null,
+            "compressionRatio": null,
+            "ingestionSpeed": null,
+            "size": null,
             "metrics": [
                 {
                     "metric": 1,
@@ -168,6 +184,9 @@
             "ingestTime": null,
             "compressedSize": null,
             "avgIngestMem": null,
+            "compressionRatio": null,
+            "ingestionSpeed": null,
+            "size": null,
             "metrics": [
                 {
                     "metric": 1,
@@ -198,8 +217,11 @@
         {
             "dataset": "Average",
             "ingestTime": 6519506,
-            "compressedSize": 1010516059,
+            "compressedSize": null,
             "avgIngestMem": 5281799174,
+            "compressionRatio": 68,
+            "ingestionSpeed": 10,
+            "size": null,
             "metrics": [
                 {
                     "metric": 1,

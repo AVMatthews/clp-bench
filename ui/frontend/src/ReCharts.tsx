@@ -113,48 +113,6 @@ const getBarLabel = (metric: string, dataType: string, value: number) => {
   }
 };
 
-const colorMapping: Record<string, string> = {
-    CLP: '#00C7BD', //Teal
-    //'CLP (--disable-log-order)': '#009e96', //Teal
-    Splunk: '#E20082',//Pink
-    Elasticsearch: '#008EC2', //Light Blue
-    Loki: '#A4A4A4',//Grey
-    grep: '#2DE109',//Terminal Green
-    'ClickHouse (JSON string)': '#F0B400', //Dark Yellow
-    'ClickHouse (native json)': '#FFDD1A', //Light Yellow
-    MongoDB: '#008535', //Green
-    OpenObserve: '#8A14FF', //Dark Purple
-    //'OpenObserve (single-threaded)': '#BD7AFF', //Light Purple
-    //'Presto + Hive + Parquet (snappy) (JSON string)': '#cc5800',
-    'Presto Parquet (json string)': '#ff7105',
-    'Presto Parquet (pairwise arrays)': '#ff9a4d',
-    'Spark SQL Parquet (normalized)': '#d60000', //Red
-    'Parquet (json string)': '#ff7105',
-    'Parquet (pairwise arrays)': '#ff9a4d',
-    'Parquet (normalized)': '#d60000', //Red
-    //'SparkSQL (single-threaded)': '#ff4d4d', //Light Red
-
-};
-
-const TARGET_ORDER = [
-    'CLP',
-    'CLP (--disable-log-order)',
-    'Elasticsearch',
-    'Splunk',
-    'ClickHouse',
-    'ClickHouse (native JSON)',
-    'OpenObserve',
-    'OpenObserve (single-threaded)',
-    'Presto + Hive + Parquet (snappy) (JSON string)',
-    'Presto + Hive + Parquet (zstd) (JSON string)',
-    'Presto + Hive + Parquet (zstd) (column-value)',
-    'SparkSQL (multi-threaded)',
-    'SparkSQL (single-threaded)',
-    'MongoDB',
-    'Loki',
-    'grep',
-  ];
-
 const metricOptions = [
     'compressionRatio',
     'query_times',
@@ -211,15 +169,9 @@ function ReCharts() {
           payload: any[];
         };
 
-        const sizeMB =
-          BENCHMARK_WORKLOAD[type][metric].size / 1024 / 1024;
         setBenchmarkWorkload(
           BENCHMARK_WORKLOAD[type][metric].name
         );
-        //console.log("Type: ", TYPE.indexOf(type))
-        //console.log("Metric: ", METRIC.indexOf(metric))
-        //console.log("Dataset", dataset)
-        //console.log(result.payload)
 
         let data = result.payload
           .filter(
@@ -231,6 +183,8 @@ function ReCharts() {
           .map((item) => {
             //console.log(item)
             let value = 0;
+            const sizeMB = item.size / 1024 / 1024;
+
             const Q = (qs: string) =>
               qs
                 .slice(1, -1)
@@ -238,14 +192,18 @@ function ReCharts() {
                 .map(Number);
             switch (selectedMetric) {
               case 'compressionRatio':
-                if (item.compressed_size && sizeMB)
+                /* if (item.compressed_size && sizeMB)
                   value =
                     sizeMB /
-                    (item.compressed_size / 1024 / 1024);
+                    (item.compressed_size / 1024 / 1024); */
+                if (item.compression_ratio)
+                    value = item.compression_ratio
                 break;
               case 'ingestionSpeed':
-                if (item.ingest_time && sizeMB)
-                  value = sizeMB / (item.ingest_time / 1000);
+                /* if (item.ingest_time && sizeMB)
+                  value = sizeMB / (item.ingest_time / 1000); */
+                if (item.ingestion_speed)
+                    value = item.ingestion_speed
                 break;
               case 'avg_ingest_mem':
                 value = item.avg_ingest_mem / 1024 / 1024 / 1024;
@@ -269,6 +227,7 @@ function ReCharts() {
             }
             return {
               target: item.target_displayed_name,
+              color: item.color,
               value,
             };
           })
@@ -287,8 +246,6 @@ function ReCharts() {
           selectedTargets.includes(d.target)
         );
 
-        //console.log(dataType);
-
         if (
           ['avg_ingest_mem', 'avg_query_mem', 'query_times'].includes(
             selectedMetric
@@ -298,6 +255,7 @@ function ReCharts() {
           const mx = Math.max(...filtered.map((d) => d.value));
           filtered = filtered.map((d) => ({
             target: d.target,
+            color: d.color,
             value: mx / (d.value || 1),
           }));
         }
@@ -328,7 +286,7 @@ function ReCharts() {
   ]);
 
   return (
-    <Box className="flex-container"> {/* Use the flex container class */}
+    <Box className="flex-container">
         <Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
             <img
                 src={logo}
@@ -366,8 +324,6 @@ function ReCharts() {
             <IconButton
                 sx={iconButtonStyle}
                 onClick={(e) => {
-                    // You can also toggle the tooltip on click if needed
-                    // For example, using a state to control visibility
                 }}
             >
                 <InfoIcon sx={infoIconStyle}/>
@@ -423,7 +379,7 @@ function ReCharts() {
                         <Tooltip formatter={(v: number) => v.toFixed(2)} />
                         <Bar dataKey="value" isAnimationActive={false}>
                             {chartData.map((entry, index) => (
-                                <Cell key={`cell-${index}`} fill={colorMapping[entry.target] || '#8884d8'} />
+                                <Cell key={`cell-${index}`} fill={entry.color || '#8884d8'} />
                             ))}
                             <LabelList
                                 dataKey="value"
@@ -505,7 +461,7 @@ function ReCharts() {
                 <td>
                 <Stack direction="row" spacing={1} useFlexGap sx={{ flexWrap: 'wrap' }}>
                 {[...allTargets]
-                    .sort((a, b) => TARGET_ORDER.indexOf(a) - TARGET_ORDER.indexOf(b))
+                    .sort()
                     .map(target => (
                 <Chip
                     key={target}
@@ -624,6 +580,7 @@ function ReCharts() {
                 </tr>
             )}
 
+            {/*Dataset Selector*/}
             {['avg_query_mem', 'avg_ingest_mem', 'query_times'].includes(
                 selectedMetric
             ) && (

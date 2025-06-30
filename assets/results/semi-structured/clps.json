@@ -2,44 +2,51 @@
     "target": "clps",
     "targetDisplayedName": "CLP",
     "type": 2,
+    "color": "#00C7BD",
     "datasets": [
         {
             "dataset": "MongoDB",
-            "ingestTime": 846829,
-            "compressedSize": 580013403,
-            "avgIngestMem": 231873340,
+            "ingestTime": 665107,
+            "compressedSize": 407317782,
+            "avgIngestMem": 232687926,
+            "compressionRatio": 170,
+            "ingestionSpeed": 99,
+            "size": 69582861765,
             "metrics": [
                 {
                     "metric": 1,
-                    "avgQueryMem": 134112685,
+                    "avgQueryMem": 136543952,
                     "queryTimes": [
-                        744,
-                        34078,
-                        725,
-                        1238,
-                        986,
-                        764
+                        679,
+                        29140,
+                        625,
+                        1075,
+                        888,
+                        673
                     ]
                 },
                 {
                     "metric": 2,
-                    "avgQueryMem": 86551945,
+                    "avgQueryMem": 106714205,
                     "queryTimes": [
-                        3756,
-                        41432,
-                        2779,
+                        3665,
+                        32991,
+                        2804,
+                        3695,
                         4202,
-                        4023,
-                        4837
+                        3790
                     ]
                 }
             ]
         },
         {
             "dataset": "Elasticsearch",
-            "ingestTime": null,
-            "compressedSize": 68361302,
-            "avgIngestMem": null,
+            "ingestTime": 60553,
+            "compressedSize": 55547436,
+            "avgIngestMem": 244041728,
+            "compressionRatio": 154,
+            "ingestionSpeed": 134,
+            "size": 8565304619,
             "metrics": [
                 {
                     "metric": 1,
@@ -69,9 +76,12 @@
         },
         {
             "dataset": "CockroachDB",
-            "ingestTime": null,
-            "compressedSize": 394289800,
-            "avgIngestMem": null,
+            "ingestTime": 126335,
+            "compressedSize": 377058942,
+            "avgIngestMem": 324729077,
+            "compressionRatio": 27,
+            "ingestionSpeed": 79,
+            "size": 10506623721,
             "metrics": [
                 {
                     "metric": 1,
@@ -101,9 +111,12 @@
         },
         {
             "dataset": "PostgreSQL",
-            "ingestTime": null,
-            "compressedSize": 11286335,
-            "avgIngestMem": null,
+            "ingestTime": 5447,
+            "compressedSize": 10536574,
+            "avgIngestMem": 130299904,
+            "compressionRatio": 39,
+            "ingestionSpeed": 72,
+            "size": 411917670,
             "metrics": [
                 {
                     "metric": 1,
@@ -133,9 +146,12 @@
         },
         {
             "dataset": "spark-event-logs",
-            "ingestTime": null,
-            "compressedSize": 37057795,
-            "avgIngestMem": null,
+            "ingestTime": 17999,
+            "compressedSize": 36205503,
+            "avgIngestMem": 529848320,
+            "compressionRatio": 58,
+            "ingestionSpeed": 112,
+            "size": 2126027157,
             "metrics": [
                 {
                     "metric": 1,
@@ -168,6 +184,9 @@
             "ingestTime": null,
             "compressedSize": null,
             "avgIngestMem": null,
+            "compressionRatio": null,
+            "ingestionSpeed": null,
+            "size": null,
             "metrics": [
                 {
                     "metric": 1,
@@ -197,9 +216,12 @@
         },
         {
             "dataset": "Average",
-            "ingestTime": 846829,
-            "compressedSize": 218201727,
-            "avgIngestMem": 231873340,
+            "ingestTime": 175088,
+            "compressedSize": null,
+            "avgIngestMem": 292321391,
+            "compressionRatio": 90,
+            "ingestionSpeed": 99,
+            "size": null,
             "metrics": [
                 {
                     "metric": 1,

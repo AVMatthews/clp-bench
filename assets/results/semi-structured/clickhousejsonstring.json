@@ -2,12 +2,16 @@
     "target": "clickhousejsonstring",
     "targetDisplayedName": "ClickHouse (JSON string)",
     "type": 2,
+    "color": "#F0B400",
     "datasets": [
         {
             "dataset": "MongoDB",
             "ingestTime": 455576,
             "compressedSize": 1049818265,
             "avgIngestMem": 1665403699,
+            "compressionRatio": 66,
+            "ingestionSpeed": 145,
+            "size": 69582861765,
             "metrics": [
                 {
                     "metric": 1,
@@ -40,6 +44,9 @@
             "ingestTime": 16084,
             "compressedSize": 109334504,
             "avgIngestMem": 1919182848,
+            "compressionRatio": 78,
+            "ingestionSpeed": 507,
+            "size": 8565304619,
             "metrics": [
                 {
                     "metric": 1,
@@ -72,6 +79,9 @@
             "ingestTime": 29574,
             "compressedSize": 1588949538,
             "avgIngestMem": 1885644117,
+            "compressionRatio": 6,
+            "ingestionSpeed": 338,
+            "size": 10506623721,
             "metrics": [
                 {
                     "metric": 1,
@@ -104,6 +114,9 @@
             "ingestTime": 1856,
             "compressedSize": 18842809,
             "avgIngestMem": 491905024,
+            "compressionRatio": 21,
+            "ingestionSpeed": 211,
+            "size": 411917670,
             "metrics": [
                 {
                     "metric": 1,
@@ -136,6 +149,9 @@
             "ingestTime": 6780,
             "compressedSize": 125978850,
             "avgIngestMem": 1244997632,
+            "compressionRatio": 16,
+            "ingestionSpeed": 299,
+            "size": 2126027157,
             "metrics": [
                 {
                     "metric": 1,
@@ -168,6 +184,9 @@
             "ingestTime": null,
             "compressedSize": null,
             "avgIngestMem": null,
+            "compressionRatio": null,
+            "ingestionSpeed": null,
+            "size": null,
             "metrics": [
                 {
                     "metric": 1,
@@ -198,8 +217,11 @@
         {
             "dataset": "Average",
             "ingestTime": 101974,
-            "compressedSize": 578584793,
+            "compressedSize": null,
             "avgIngestMem": 1441426664,
+            "compressionRatio": 37,
+            "ingestionSpeed": 300,
+            "size": null,
             "metrics": [
                 {
                     "metric": 1,

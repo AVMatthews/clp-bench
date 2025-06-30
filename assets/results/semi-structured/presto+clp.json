@@ -1,52 +1,52 @@
 {
-    "target": "parquetjson",
-    "targetDisplayedName": "Parquet (json string)",
+    "target": "presto+clp",
+    "targetDisplayedName": "Presto + CLP",
     "type": 2,
-    "color": "#ff7105",
+    "color": "#41a45c",
     "datasets": [
         {
             "dataset": "MongoDB",
-            "ingestTime": 472508,
-            "compressedSize": 1194965667,
-            "avgIngestMem": 1298304326,
-            "compressionRatio": 58,
-            "ingestionSpeed": 140,
-            "size": 69582861765,
+            "ingestTime": null,
+            "compressedSize": null,
+            "avgIngestMem": null,
+            "compressionRatio": null,
+            "ingestionSpeed": null,
+            "size": null,
             "metrics": [
                 {
                     "metric": 1,
-                    "avgQueryMem": null,
+                    "avgQueryMem": 3103764187,
                     "queryTimes": [
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null
+                        1778,
+                        6975,
+                        1584,
+                        2170,
+                        1868,
+                        1732
                     ]
                 },
                 {
                     "metric": 2,
-                    "avgQueryMem": null,
+                    "avgQueryMem": 2138827980,
                     "queryTimes": [
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null
+                        8744,
+                        15203,
+                        5236,
+                        5305,
+                        5570,
+                        4911
                     ]
                 }
             ]
         },
         {
             "dataset": "Elasticsearch",
-            "ingestTime": 26580,
-            "compressedSize": 120789563,
-            "avgIngestMem": 1285642922,
-            "compressionRatio": 70,
-            "ingestionSpeed": 307,
-            "size": 8565304619,
+            "ingestTime": null,
+            "compressedSize": null,
+            "avgIngestMem": null,
+            "compressionRatio": null,
+            "ingestionSpeed": null,
+            "size": null,
             "metrics": [
                 {
                     "metric": 1,
@@ -76,12 +76,12 @@
         },
         {
             "dataset": "CockroachDB",
-            "ingestTime": 74945,
-            "compressedSize": 540510588,
-            "avgIngestMem": 1588949538,
-            "compressionRatio": 19,
-            "ingestionSpeed": 133,
-            "size": 10506623721,
+            "ingestTime": null,
+            "compressedSize": null,
+            "avgIngestMem": null,
+            "compressionRatio": null,
+            "ingestionSpeed": null,
+            "size": null,
             "metrics": [
                 {
                     "metric": 1,
@@ -111,12 +111,12 @@
         },
         {
             "dataset": "PostgreSQL",
-            "ingestTime": 3523,
-            "compressedSize": 20196968,
-            "avgIngestMem": 1122353152,
-            "compressionRatio": 20,
-            "ingestionSpeed": 111,
-            "size": 411917670,
+            "ingestTime": null,
+            "compressedSize": null,
+            "avgIngestMem": null,
+            "compressionRatio": null,
+            "ingestionSpeed": null,
+            "size": null,
             "metrics": [
                 {
                     "metric": 1,
@@ -146,12 +146,12 @@
         },
         {
             "dataset": "spark-event-logs",
-            "ingestTime": 8664,
-            "compressedSize": 100199730,
-            "avgIngestMem": 1306345472,
-            "compressionRatio": 21,
-            "ingestionSpeed": 234,
-            "size": 2126027157,
+            "ingestTime": null,
+            "compressedSize": null,
+            "avgIngestMem": null,
+            "compressionRatio": null,
+            "ingestionSpeed": null,
+            "size": null,
             "metrics": [
                 {
                     "metric": 1,
@@ -216,11 +216,11 @@
         },
         {
             "dataset": "Average",
-            "ingestTime": 117244,
+            "ingestTime": null,
             "compressedSize": null,
-            "avgIngestMem": 1320319082,
-            "compressionRatio": 38,
-            "ingestionSpeed": 185,
+            "avgIngestMem": null,
+            "compressionRatio": null,
+            "ingestionSpeed": null,
             "size": null,
             "metrics": [
                 {

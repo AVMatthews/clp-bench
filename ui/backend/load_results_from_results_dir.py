@@ -37,12 +37,16 @@ for type_dir in type_dirs:
         target_name = results_of_target["target"]
         target_displayed_name = results_of_target["targetDisplayedName"]
         type_value = results_of_target["type"]
+        color = results_of_target["color"]
 
         for dataset in results_of_target["datasets"]:
             dataset_name = dataset["dataset"]
             ingest_time = dataset["ingestTime"]
             compressed_size = dataset["compressedSize"]
             avg_ingest_mem = dataset["avgIngestMem"]
+            compression_ratio = dataset["compressionRatio"]
+            ingestion_speed = dataset["ingestionSpeed"]
+            size = dataset["size"]
             
             for metric in dataset["metrics"]:
                 metric_value = metric["metric"]
@@ -56,11 +60,15 @@ for type_dir in type_dirs:
                             target_displayed_name,
                             dataset_name,
                             type_value,
+                            color,
                             metric_value,
                             ingest_time,
                             compressed_size,
                             avg_ingest_mem,
                             avg_query_mem,
+                            compression_ratio,
+                            ingestion_speed,
+                            size
                         ),
                         tuple(query_times),
                     )
@@ -78,11 +86,15 @@ def dump_and_post():
                 "target_displayed_name": result[0][1],
                 "dataset": result[0][2],
                 "type": result[0][3],
-                "metric": result[0][4],
-                "ingest_time": result[0][5],
-                "compressed_size": result[0][6],
-                "avg_ingest_mem": result[0][7],
-                "avg_query_mem": result[0][8],
+                "color": result[0][4],
+                "metric": result[0][5],
+                "ingest_time": result[0][6],
+                "compressed_size": result[0][7],
+                "avg_ingest_mem": result[0][8],
+                "avg_query_mem": result[0][9],
+                "compression_ratio": result[0][10],
+                "ingestion_speed": result[0][11],
+                "size": result[0][12],
                 "query_times": str(list(result[1])),
             }
         )
