@@ -87,30 +87,29 @@ const getSeriesLabel = (metric: string) => {
 };
 
 const getBarLabel = (metric: string, dataType: string, value: number) => {
-  let suffix = '';
-  if (metric === 'ingestionSpeed'){
-    suffix = ' MB/s';
-    return value.toFixed(0) + suffix;
-  } else if ((metric === 'avg_ingest_mem' || metric === 'avg_query_mem') && dataType === 'raw') {
-    suffix = ' GB';
-  } else if (metric === 'query_times' && dataType === 'raw') {
-    suffix = 's';
-  }else if (metric === 'compressionRatio') {
-    suffix = ' : 1';
-    return value.toFixed(0) + suffix;
-  }else{
-    suffix = 'x';
-  }
-
-  if ( value < 1){
-    return value.toFixed(2) + suffix;
-  }else {
-    //console.log(value);
-    if  ((value % 1) < 0.05 || (value % 1) > 0.95) {
+    let suffix = '';
+    if (metric === 'ingestionSpeed'){
+        suffix = ' MB/s';
         return value.toFixed(0) + suffix;
+    } else if ((metric === 'avg_ingest_mem' || metric === 'avg_query_mem') && dataType === 'raw') {
+        suffix = ' GB';
+    } else if (metric === 'query_times' && dataType === 'raw') {
+        suffix = 's';
+    }else if (metric === 'compressionRatio') {
+        suffix = ' : 1';
+        return value.toFixed(0) + suffix;
+    }else{
+        suffix = 'x';
     }
-    return value.toFixed(1) + suffix;
-  }
+
+    if ( value < 1){
+        return value.toFixed(2) + suffix;
+    }else {
+        if  ((value % 1) < 0.05 || (value % 1) > 0.95) {
+            return value.toFixed(0) + suffix;
+        }
+        return value.toFixed(1) + suffix;
+    }
 };
 
 const metricOptions = [
@@ -181,7 +180,6 @@ function ReCharts() {
               i.dataset === dataset
           )
           .map((item) => {
-            //console.log(item)
             let value = 0;
             const sizeMB = item.size / 1024 / 1024;
 
@@ -316,7 +314,7 @@ function ReCharts() {
             </Link>
         </Box>
         
-
+        <Box className="dataset-label">
         {((type === 'json' && (selectedMetric === 'query_times' || selectedMetric === 'avg_query_mem'))|| type === 'unstructured') && (
         <Box>
             <Typography sx={selectorStyle}>
@@ -331,6 +329,7 @@ function ReCharts() {
             </Typography>
         </Box>
         )}
+        </Box>
 
         <Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
             <Typography level="h4" sx={{color: 'text.primary', marginRight: 1 }}>
@@ -347,61 +346,64 @@ function ReCharts() {
             </Typography>
         </Box>
 
-
-      {loading ? (
-        <Box textAlign="center" mt={4}>Loading data…</Box>
-      ) : chartData.length ? (
-        <Box display="flex" alignItems="center">
-            {(selectedMetric === 'compressionRatio' || selectedMetric === 'ingestionSpeed' || dataType === 'comparison') ? (<Box 
-                style={yaxisLabelStyle}
-            >
-                <text>
-                    &emsp;&emsp;&emsp;<b>Worse&emsp;&lArr;</b>
-                    &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
-                    <b>&rArr;&emsp; Better</b>     
-                </text>
-            </Box>): (<Box 
-                style={yaxisLabelStyle}
-            >
-                <text>
-                    &emsp;&emsp;&emsp;<b>Better&emsp;&lArr;</b>
-                    &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
-                    <b>&rArr;&emsp;Worse</b>     
-                </text>
-            </Box>)}
-            <Box className="chart-container"> {/* Chart container */}
-                <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={chartData} margin={{ top: 40, bottom: 70, left:-20, right:60}}>
-                        <XAxis interval={0} style={{ fontFamily: 'Roboto' }} tick={<CustomXAxisTick/>} dataKey="target"/>
-                        <YAxis 
-                            style={{ fontFamily: 'Roboto'}}>
-                        </YAxis>
-                        <Tooltip formatter={(v: number) => v.toFixed(2)} />
-                        <Bar dataKey="value" isAnimationActive={false}>
-                            {chartData.map((entry, index) => (
-                                <Cell key={`cell-${index}`} fill={entry.color || '#8884d8'} />
-                            ))}
-                            <LabelList
-                                dataKey="value"
-                                position="top"
-                                width= {150}
-                                style={{ fontSize: '1.5vw', fontWeight: 'bold', fill: '#4a4a4a' , fontFamily: 'Roboto' }}
-                                formatter={(v: number) => getBarLabel(selectedMetric, dataType, v)}
-                            />
-                        </Bar>
-                    </BarChart>
-                </ResponsiveContainer>
+        <Box sx={{ width: '100%', height: '450px', position: 'relative' }}>
+        {loading ? (
+            <Box textAlign="center" mt={4}>Loading data…</Box>
+        ) : chartData.length ? (
+            <Box display="flex" alignItems="center">
+                {(selectedMetric === 'compressionRatio' || selectedMetric === 'ingestionSpeed' || dataType === 'comparison') ? (<Box 
+                    style={yaxisLabelStyle}
+                >
+                    <text>
+                        &emsp;&emsp;&emsp;<b>Worse&emsp;&lArr;</b>
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+                        <b>&rArr;&emsp; Better</b>     
+                    </text>
+                </Box>): (<Box 
+                    style={yaxisLabelStyle}
+                >
+                    <text>
+                        &emsp;&emsp;&emsp;<b>Better&emsp;&lArr;</b>
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+                        <b>&rArr;&emsp;Worse</b>     
+                    </text>
+                </Box>)}
+                <Box className="chart-container"> {/* Chart container */}
+                    <ResponsiveContainer width="100%" height="100%">
+                        <BarChart data={chartData} margin={{ top: 40, bottom: 70, left:-20, right:60}}>
+                            <XAxis interval={0} style={{ fontFamily: 'Roboto' }} tick={<CustomXAxisTick/>} dataKey="target"/>
+                            <YAxis 
+                                style={{ fontFamily: 'Roboto'}}>
+                            </YAxis>
+                            <Tooltip formatter={(v: number) => v.toFixed(2)} />
+                            <Bar dataKey="value" isAnimationActive={false}>
+                                {chartData.map((entry, index) => (
+                                    <Cell key={`cell-${index}`} fill={entry.color || '#8884d8'} />
+                                ))}
+                                <LabelList
+                                    dataKey="value"
+                                    position="top"
+                                    width= {150}
+                                    style={{ fontSize: '1.5vw', fontWeight: 'bold', fill: '#4a4a4a' , fontFamily: 'Roboto' }}
+                                    formatter={(v: number) => getBarLabel(selectedMetric, dataType, v)}
+                                />
+                            </Bar>
+                        </BarChart>
+                    </ResponsiveContainer>
+                </Box>
+                </Box>
+        ) : (
+            <Box textAlign="center" mt={4}>
+            No data available for the selected type and metric.
             </Box>
-            </Box>
-      ) : (
-        <Box textAlign="center" mt={4}>
-          No data available for the selected type and metric.
+        )}
         </Box>
-      )}
 
-      <Table>
+        <Box sx={{ width: '100%', height: '450px', position: 'relative' }}>
+        <Table>
         <tbody>
             {/* Type selector */}
+            {/* 
             <tr>
                 <td style={{ width: '10%' }}>
                 <Typography sx={selectorStyle}>
@@ -445,12 +447,13 @@ function ReCharts() {
                 ))}
                 </Stack>
                 </td>
-            </tr>
+            </tr> 
+            */}
 
             
             {/* Tools */}
             <tr>
-                <td>
+                <td style={{ width: '10%' }}>
                 <Typography sx={selectorStyle}>
                         Tools
                     <IconButton sx={iconButtonStyle}>
@@ -649,6 +652,7 @@ function ReCharts() {
             )}
         </tbody>
         </Table>
+        </Box>
     </Box>
   );
 }
