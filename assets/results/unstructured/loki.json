@@ -184,8 +184,8 @@
             "ingestTime": 8661810,
             "compressedSize": 26788642161,
             "avgIngestMem": 43078521979,
-            "compressionRatio": 10,
-            "ingestionSpeed": 30,
+            "compressionRatio": 10.31124171,
+            "ingestionSpeed": 30.41256863,
             "size": 276224000000,
             "metrics": [
                 {
@@ -219,8 +219,8 @@
             "ingestTime": 8661810,
             "compressedSize": null,
             "avgIngestMem": 43078521979,
-            "compressionRatio": 10,
-            "ingestionSpeed": 30,
+            "compressionRatio": 10.31,
+            "ingestionSpeed": 30.41,
             "size": null,
             "metrics": [
                 {

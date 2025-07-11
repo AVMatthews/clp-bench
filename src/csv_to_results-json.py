@@ -10,7 +10,10 @@ def parse_number(value):
         return None
     value = value.replace(',', '')
     try:
-        return int(float(value))
+        # Try converting to float first
+        number = float(value)
+        # Return as int if the number is whole, otherwise return as float
+        return int(number) if number.is_integer() else number
     except ValueError:
         return None
 
@@ -131,7 +134,11 @@ def main(input_csv, output_folder):
                 "ingestionSpeed": None,
                 "size": None,
                 "metrics": []
-            })   
+            })  
+            """ print(name)
+            print(dataset)
+            print(compressionRatio[j][i])
+            print(parse_number(compressionRatio[j][i])) """
             system_data[name]["datasets"][j]["ingestTime"] = parse_number(ingestionTimes[j][i])
             system_data[name]["datasets"][j]["compressedSize"] = parse_number(compressedSizes[j][i])
             system_data[name]["datasets"][j]["avgIngestMem"] = parse_number(avgIngestMems[j][i])

@@ -9,8 +9,8 @@
             "ingestTime": 5219964,
             "compressedSize": 1178418343,
             "avgIngestMem": 26567591,
-            "compressionRatio": 59,
-            "ingestionSpeed": 12,
+            "compressionRatio": 59.05,
+            "ingestionSpeed": 12.71,
             "size": 69582861765,
             "metrics": [
                 {
@@ -44,8 +44,8 @@
             "ingestTime": 204264,
             "compressedSize": 61363515,
             "avgIngestMem": 26190023,
-            "compressionRatio": 139,
-            "ingestionSpeed": 39,
+            "compressionRatio": 139.583018,
+            "ingestionSpeed": 39.99,
             "size": 8565304619,
             "metrics": [
                 {
@@ -79,8 +79,8 @@
             "ingestTime": 355734,
             "compressedSize": 406183987,
             "avgIngestMem": 26269551,
-            "compressionRatio": 25,
-            "ingestionSpeed": 28,
+            "compressionRatio": 25.86666156,
+            "ingestionSpeed": 28.17,
             "size": 10506623721,
             "metrics": [
                 {
@@ -114,8 +114,8 @@
             "ingestTime": 180743,
             "compressedSize": 11843010,
             "avgIngestMem": 26049080,
-            "compressionRatio": 34,
-            "ingestionSpeed": 2,
+            "compressionRatio": 34.78150149,
+            "ingestionSpeed": 2.17,
             "size": 411917670,
             "metrics": [
                 {
@@ -149,8 +149,8 @@
             "ingestTime": 204264,
             "compressedSize": 132466654,
             "avgIngestMem": 26190023,
-            "compressionRatio": 16,
-            "ingestionSpeed": 9,
+            "compressionRatio": 16.04952713,
+            "ingestionSpeed": 9.93,
             "size": 2126027157,
             "metrics": [
                 {
@@ -216,11 +216,11 @@
         },
         {
             "dataset": "Average",
-            "ingestTime": 1232993,
+            "ingestTime": 1232993.8,
             "compressedSize": null,
-            "avgIngestMem": 26253253,
-            "compressionRatio": 55,
-            "ingestionSpeed": 18,
+            "avgIngestMem": 26253253.6,
+            "compressionRatio": 55.07,
+            "ingestionSpeed": 18.59,
             "size": null,
             "metrics": [
                 {
