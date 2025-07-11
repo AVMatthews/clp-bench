@@ -15,11 +15,6 @@
     /*flex: 1; /* Allow the chart container to grow */
 }
 
-.dataset-label {
-    width: 100%; /* Full width */
-    height: 10px; /* Fixed height for the chart */
-}
-
 .xaxis-label {
    font-size: 0.9vw; /* Responsive font size for x-axis labels */
 }

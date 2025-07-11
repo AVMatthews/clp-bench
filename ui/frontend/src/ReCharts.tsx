@@ -172,7 +172,7 @@ function ReCharts() {
           BENCHMARK_WORKLOAD[type][metric].name
         );
 
-        let data = result.payload
+        const data = result.payload
           .filter(
             (i) =>
               i.type === TYPE.indexOf(type) &&
@@ -314,7 +314,7 @@ function ReCharts() {
             </Link>
         </Box>
         
-        <Box className="dataset-label">
+        <Box sx={{display: 'flex', height: 40}}>
         {((type === 'json' && (selectedMetric === 'query_times' || selectedMetric === 'avg_query_mem'))|| type === 'unstructured') && (
         <Box>
             <Typography sx={selectorStyle}>
@@ -331,7 +331,7 @@ function ReCharts() {
         )}
         </Box>
 
-        <Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+        <Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: 40}}>
             <Typography level="h4" sx={{color: 'text.primary', marginRight: 1 }}>
                 {getSeriesLabel(selectedMetric)}
             <IconButton
@@ -346,7 +346,7 @@ function ReCharts() {
             </Typography>
         </Box>
 
-        <Box sx={{ width: '100%', height: '450px', position: 'relative' }}>
+        <Box sx={{ width: '100%', height: '650px', position: 'relative' }}>
         {loading ? (
             <Box textAlign="center" mt={4}>Loading data…</Box>
         ) : chartData.length ? (
