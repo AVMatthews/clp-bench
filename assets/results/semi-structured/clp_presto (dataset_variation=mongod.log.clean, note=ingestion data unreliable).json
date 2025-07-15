@@ -1,186 +1,11 @@
 {
-    "target": "parquetnormalized",
-    "targetDisplayedName": "Parquet (normalized)",
+    "target": "clp_presto (dataset_variation=mongod.log.clean, note=ingestion data unreliable)",
+    "targetDisplayedName": "Presto + CLP",
     "type": 2,
-    "color": "#d60000",
+    "color": "#41a45c",
     "datasets": [
         {
-            "dataset": "MongoDB",
-            "ingestTime": 5219964,
-            "compressedSize": 1178418343,
-            "avgIngestMem": 26567591,
-            "compressionRatio": 59.05,
-            "ingestionSpeed": 12.71,
-            "size": 69582861765,
-            "metrics": [
-                {
-                    "metric": 1,
-                    "avgQueryMem": null,
-                    "queryTimes": [
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null
-                    ]
-                },
-                {
-                    "metric": 2,
-                    "avgQueryMem": null,
-                    "queryTimes": [
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null
-                    ]
-                }
-            ]
-        },
-        {
-            "dataset": "Elasticsearch",
-            "ingestTime": 204264,
-            "compressedSize": 61363515,
-            "avgIngestMem": 26190023,
-            "compressionRatio": 139.583018,
-            "ingestionSpeed": 39.99,
-            "size": 8565304619,
-            "metrics": [
-                {
-                    "metric": 1,
-                    "avgQueryMem": null,
-                    "queryTimes": [
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null
-                    ]
-                },
-                {
-                    "metric": 2,
-                    "avgQueryMem": null,
-                    "queryTimes": [
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null
-                    ]
-                }
-            ]
-        },
-        {
-            "dataset": "CockroachDB",
-            "ingestTime": 355734,
-            "compressedSize": 406183987,
-            "avgIngestMem": 26269551,
-            "compressionRatio": 25.86666156,
-            "ingestionSpeed": 28.17,
-            "size": 10506623721,
-            "metrics": [
-                {
-                    "metric": 1,
-                    "avgQueryMem": null,
-                    "queryTimes": [
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null
-                    ]
-                },
-                {
-                    "metric": 2,
-                    "avgQueryMem": null,
-                    "queryTimes": [
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null
-                    ]
-                }
-            ]
-        },
-        {
-            "dataset": "PostgreSQL",
-            "ingestTime": 180743,
-            "compressedSize": 11843010,
-            "avgIngestMem": 26049080,
-            "compressionRatio": 34.78150149,
-            "ingestionSpeed": 2.17,
-            "size": 411917670,
-            "metrics": [
-                {
-                    "metric": 1,
-                    "avgQueryMem": null,
-                    "queryTimes": [
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null
-                    ]
-                },
-                {
-                    "metric": 2,
-                    "avgQueryMem": null,
-                    "queryTimes": [
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null
-                    ]
-                }
-            ]
-        },
-        {
-            "dataset": "spark-event-logs",
-            "ingestTime": 204264,
-            "compressedSize": 132466654,
-            "avgIngestMem": 26190023,
-            "compressionRatio": 16.04952713,
-            "ingestionSpeed": 9.93,
-            "size": 2126027157,
-            "metrics": [
-                {
-                    "metric": 1,
-                    "avgQueryMem": null,
-                    "queryTimes": [
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null
-                    ]
-                },
-                {
-                    "metric": 2,
-                    "avgQueryMem": null,
-                    "queryTimes": [
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null
-                    ]
-                }
-            ]
-        },
-        {
-            "dataset": "Hadoop",
+            "dataset": "\ufeff",
             "ingestTime": null,
             "compressedSize": null,
             "avgIngestMem": null,
@@ -215,12 +40,187 @@
             ]
         },
         {
-            "dataset": "Average",
-            "ingestTime": 1232993.8,
+            "dataset": "MongoDB",
+            "ingestTime": 1013271.7,
+            "compressedSize": 407207834,
+            "avgIngestMem": 1246370891.67,
+            "compressionRatio": 176.79,
+            "ingestionSpeed": 67.76,
+            "size": 71991308622,
+            "metrics": [
+                {
+                    "metric": 1,
+                    "avgQueryMem": 1659790369.57,
+                    "queryTimes": [
+                        5542.73,
+                        44187.11,
+                        1675.47,
+                        2468.62,
+                        6891.8,
+                        5419.23
+                    ]
+                },
+                {
+                    "metric": 2,
+                    "avgQueryMem": 1473480350.77,
+                    "queryTimes": [
+                        11847.85,
+                        45407.1,
+                        5522.95,
+                        6258.7,
+                        11507.2,
+                        8652.34
+                    ]
+                }
+            ]
+        },
+        {
+            "dataset": "Elasticsearch",
+            "ingestTime": null,
             "compressedSize": null,
-            "avgIngestMem": 26253253.6,
-            "compressionRatio": 55.07,
-            "ingestionSpeed": 18.59,
+            "avgIngestMem": null,
+            "compressionRatio": null,
+            "ingestionSpeed": null,
+            "size": null,
+            "metrics": [
+                {
+                    "metric": 1,
+                    "avgQueryMem": null,
+                    "queryTimes": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                    ]
+                },
+                {
+                    "metric": 2,
+                    "avgQueryMem": null,
+                    "queryTimes": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                    ]
+                }
+            ]
+        },
+        {
+            "dataset": "CockroachDB",
+            "ingestTime": 222021.94,
+            "compressedSize": 376593655,
+            "avgIngestMem": 1184877661.09,
+            "compressionRatio": 27.9,
+            "ingestionSpeed": 45.13,
+            "size": 10506623721,
+            "metrics": [
+                {
+                    "metric": 1,
+                    "avgQueryMem": null,
+                    "queryTimes": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                    ]
+                },
+                {
+                    "metric": 2,
+                    "avgQueryMem": null,
+                    "queryTimes": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                    ]
+                }
+            ]
+        },
+        {
+            "dataset": "PostgreSQL",
+            "ingestTime": null,
+            "compressedSize": null,
+            "avgIngestMem": null,
+            "compressionRatio": null,
+            "ingestionSpeed": null,
+            "size": null,
+            "metrics": [
+                {
+                    "metric": 1,
+                    "avgQueryMem": null,
+                    "queryTimes": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                    ]
+                },
+                {
+                    "metric": 2,
+                    "avgQueryMem": null,
+                    "queryTimes": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                    ]
+                }
+            ]
+        },
+        {
+            "dataset": "spark-event-logs",
+            "ingestTime": 106708.67,
+            "compressedSize": 36313839,
+            "avgIngestMem": 998557598.48,
+            "compressionRatio": 58.55,
+            "ingestionSpeed": 19,
+            "size": 2126027157,
+            "metrics": [
+                {
+                    "metric": 1,
+                    "avgQueryMem": null,
+                    "queryTimes": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                    ]
+                },
+                {
+                    "metric": 2,
+                    "avgQueryMem": null,
+                    "queryTimes": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                    ]
+                }
+            ]
+        },
+        {
+            "dataset": "Average",
+            "ingestTime": 447334.1,
+            "compressedSize": null,
+            "avgIngestMem": 1143268717.08,
+            "compressionRatio": 87.75,
+            "ingestionSpeed": 33.47,
             "size": null,
             "metrics": [
                 {
