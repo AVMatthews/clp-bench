@@ -41,46 +41,46 @@
         },
         {
             "dataset": "MongoDB",
-            "ingestTime": 3741698.44,
+            "ingestTime": 3741698.445,
             "compressedSize": 1720666128,
-            "avgIngestMem": 1887036349.01,
-            "compressionRatio": 40.44,
-            "ingestionSpeed": 17.74,
+            "avgIngestMem": 1887036349,
+            "compressionRatio": 40.43949063,
+            "ingestionSpeed": 17.73509787,
             "size": 69582861765,
             "metrics": [
                 {
                     "metric": 1,
-                    "avgQueryMem": 2394868693.75,
+                    "avgQueryMem": 2394868694,
                     "queryTimes": [
-                        127427.91,
-                        171375.9,
-                        149880.87,
-                        149331.7,
-                        164330.72,
-                        161003.92
+                        127427.9075,
+                        171375.8953,
+                        149880.8727,
+                        149331.6987,
+                        164330.7164,
+                        161003.9213
                     ]
                 },
                 {
                     "metric": 2,
-                    "avgQueryMem": 1503008747.46,
+                    "avgQueryMem": 1503008747,
                     "queryTimes": [
-                        218467.25,
-                        187709.77,
-                        156964.91,
-                        153007.26,
-                        182603.43,
-                        179967.96
+                        218467.2492,
+                        187709.7745,
+                        156964.9138,
+                        153007.2572,
+                        182603.4255,
+                        179967.9585
                     ]
                 }
             ]
         },
         {
             "dataset": "Elasticsearch",
-            "ingestTime": 312137.49,
+            "ingestTime": 312137.4853,
             "compressedSize": 168822031,
-            "avgIngestMem": 1104081556.65,
-            "compressionRatio": 50.74,
-            "ingestionSpeed": 26.17,
+            "avgIngestMem": 1104081557,
+            "compressionRatio": 50.73570415,
+            "ingestionSpeed": 26.16959325,
             "size": 8565304619,
             "metrics": [
                 {
@@ -111,11 +111,11 @@
         },
         {
             "dataset": "CockroachDB",
-            "ingestTime": 530381.68,
+            "ingestTime": 530381.6752,
             "compressedSize": 570817209,
             "avgIngestMem": 1211691008,
-            "compressionRatio": 18.41,
-            "ingestionSpeed": 18.89,
+            "compressionRatio": 18.40628411,
+            "ingestionSpeed": 18.89186158,
             "size": 10506623721,
             "metrics": [
                 {
@@ -146,11 +146,11 @@
         },
         {
             "dataset": "PostgreSQL",
-            "ingestTime": 28309.45,
+            "ingestTime": 28309.45039,
             "compressedSize": 19191158,
             "avgIngestMem": 1056305152,
-            "compressionRatio": 21.46,
-            "ingestionSpeed": 13.88,
+            "compressionRatio": 21.4639299,
+            "ingestionSpeed": 13.87647224,
             "size": 411917670,
             "metrics": [
                 {
@@ -181,11 +181,11 @@
         },
         {
             "dataset": "spark-event-logs",
-            "ingestTime": 103401.23,
+            "ingestTime": 103401.2277,
             "compressedSize": 120488125,
-            "avgIngestMem": 1081658611.81,
-            "compressionRatio": 17.65,
-            "ingestionSpeed": 19.61,
+            "avgIngestMem": 1081658612,
+            "compressionRatio": 17.64511778,
+            "ingestionSpeed": 19.60844702,
             "size": 2126027157,
             "metrics": [
                 {
