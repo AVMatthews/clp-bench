@@ -41,35 +41,35 @@
         },
         {
             "dataset": "MongoDB",
-            "ingestTime": 740622.7019,
-            "compressedSize": 407318042,
-            "avgIngestMem": 233792069.2,
-            "compressionRatio": 170.8317693,
-            "ingestionSpeed": 89.59945186,
+            "ingestTime": 727775.7976,
+            "compressedSize": 407317636,
+            "avgIngestMem": 235486247.4,
+            "compressionRatio": 170.8319395,
+            "ingestionSpeed": 91.18108674,
             "size": 69582861765,
             "metrics": [
                 {
                     "metric": 1,
-                    "avgQueryMem": 71689625.6,
+                    "avgQueryMem": 67475298.84,
                     "queryTimes": [
-                        677.4106026,
-                        30512.95137,
-                        618.9472675,
-                        1088.855982,
-                        883.2631111,
-                        688.5397434
+                        758.2845688,
+                        31256.54554,
+                        698.325634,
+                        1138.11779,
+                        980.3497791,
+                        778.9673805
                     ]
                 },
                 {
                     "metric": 2,
-                    "avgQueryMem": 53937144.89,
+                    "avgQueryMem": 68513496.89,
                     "queryTimes": [
-                        3306.162119,
-                        31779.69313,
-                        2256.984234,
-                        2825.302362,
-                        3209.643126,
-                        2859.113932
+                        1652.683258,
+                        32708.96029,
+                        678.9271832,
+                        1140.118599,
+                        992.2924042,
+                        758.3742142
                     ]
                 }
             ]
@@ -216,11 +216,11 @@
         },
         {
             "dataset": "Average",
-            "ingestTime": 203545.92,
+            "ingestTime": 200976.54,
             "compressedSize": null,
-            "avgIngestMem": 328537618.95,
+            "avgIngestMem": 328876454.59,
             "compressionRatio": 87.86,
-            "ingestionSpeed": 79.94,
+            "ingestionSpeed": 67.21,
             "size": null,
             "metrics": [
                 {

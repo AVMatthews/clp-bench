@@ -41,46 +41,46 @@
         },
         {
             "dataset": "MongoDB",
-            "ingestTime": 487567.1282,
+            "ingestTime": 487567.13,
             "compressedSize": 1194999900,
-            "avgIngestMem": 1199773633,
-            "compressionRatio": 58.22834108,
-            "ingestionSpeed": 136.1030806,
+            "avgIngestMem": 1199773632.66,
+            "compressionRatio": 58.23,
+            "ingestionSpeed": 136.1,
             "size": 69582861765,
             "metrics": [
                 {
                     "metric": 1,
-                    "avgQueryMem": 1582009018,
+                    "avgQueryMem": 1582009017.52,
                     "queryTimes": [
-                        220341.4052,
-                        221547.4625,
-                        275898.5076,
-                        217293.9596,
-                        219246.2573,
-                        221985.1131
+                        220341.41,
+                        221547.46,
+                        275898.51,
+                        217293.96,
+                        219246.26,
+                        221985.11
                     ]
                 },
                 {
                     "metric": 2,
-                    "avgQueryMem": 1609240447,
+                    "avgQueryMem": 1609240447.04,
                     "queryTimes": [
-                        222783.7985,
-                        227604.7206,
-                        282017.2267,
-                        222024.3318,
-                        219982.7745,
-                        223603.6558
+                        222783.8,
+                        227604.72,
+                        282017.23,
+                        222024.33,
+                        219982.77,
+                        223603.66
                     ]
                 }
             ]
         },
         {
             "dataset": "Elasticsearch",
-            "ingestTime": 79298.92421,
+            "ingestTime": 79298.92,
             "compressedSize": 120789563,
             "avgIngestMem": 1271181568,
-            "compressionRatio": 70.9109662,
-            "ingestionSpeed": 103.0091027,
+            "compressionRatio": 70.91,
+            "ingestionSpeed": 103.01,
             "size": 8565304619,
             "metrics": [
                 {
@@ -111,11 +111,11 @@
         },
         {
             "dataset": "CockroachDB",
-            "ingestTime": 107056.6516,
+            "ingestTime": 107056.65,
             "compressedSize": 540510588,
-            "avgIngestMem": 1439687631,
-            "compressionRatio": 19.438331,
-            "ingestionSpeed": 93.5943451,
+            "avgIngestMem": 1439687631.24,
+            "compressionRatio": 19.44,
+            "ingestionSpeed": 93.59,
             "size": 10506623721,
             "metrics": [
                 {
@@ -146,11 +146,11 @@
         },
         {
             "dataset": "PostgreSQL",
-            "ingestTime": 8576.40028,
+            "ingestTime": 8576.4,
             "compressedSize": 20196968,
             "avgIngestMem": 1159479296,
-            "compressionRatio": 20.39502513,
-            "ingestionSpeed": 45.80421733,
+            "compressionRatio": 20.4,
+            "ingestionSpeed": 45.8,
             "size": 411917670,
             "metrics": [
                 {
@@ -181,11 +181,11 @@
         },
         {
             "dataset": "spark-event-logs",
-            "ingestTime": 22418.50376,
+            "ingestTime": 22418.5,
             "compressedSize": 100199730,
-            "avgIngestMem": 1388632474,
-            "compressionRatio": 21.21789307,
-            "ingestionSpeed": 90.44035754,
+            "avgIngestMem": 1388632473.6,
+            "compressionRatio": 21.22,
+            "ingestionSpeed": 90.44,
             "size": 2126027157,
             "metrics": [
                 {
@@ -220,7 +220,7 @@
             "compressedSize": null,
             "avgIngestMem": 1291750920.3,
             "compressionRatio": 38.04,
-            "ingestionSpeed": 93.79,
+            "ingestionSpeed": 78.49,
             "size": null,
             "metrics": [
                 {
