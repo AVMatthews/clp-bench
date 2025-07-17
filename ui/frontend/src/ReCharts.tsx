@@ -43,7 +43,7 @@ const yaxisLabelStyle = {
     transform: 'rotate(180deg)', 
     marginRight: '2px', 
     fontFamily: 'Roboto', 
-    fontSize: '18px', 
+    fontSize: '17px', 
     textAlign: 'left', 
 }
 
@@ -125,11 +125,11 @@ const CustomXAxisTick = ({ x, y, payload }: any) => {
       return (
         <Text
             className='xaxis-label'
-            width={80} // Adjust width as needed
+            width={200} // Adjust width as needed
             x={x} 
             y={y} 
             textAnchor="middle"
-            style={{ fontFamily: 'Roboto,sans-serif', fill: '#4a4a4a' }}
+            style={{ fontFamily: 'Roboto,sans-serif', fill: '#4a4a4a'}}
             verticalAnchor="start"
             angle={0}
         >{payload.value}</Text>
@@ -331,7 +331,7 @@ function ReCharts() {
         )}
         </Box>
 
-        <Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: 40}}>
+        <Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: 30}}>
             <Typography level="h4" sx={{color: 'text.primary', marginRight: 1 }}>
                 {getSeriesLabel(selectedMetric)}
             <IconButton
@@ -346,7 +346,7 @@ function ReCharts() {
             </Typography>
         </Box>
 
-        <Box sx={{ width: '100%', height: '650px', position: 'relative' }}>
+        <Box sx={{ width: '100%', height: '500px', position: 'relative' }}>
         {loading ? (
             <Box textAlign="center" mt={4}>Loading data…</Box>
         ) : chartData.length ? (
@@ -356,7 +356,7 @@ function ReCharts() {
                 >
                     <text>
                         &emsp;&emsp;&emsp;<b>Worse&emsp;&lArr;</b>
-                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
                         <b>&rArr;&emsp; Better</b>     
                     </text>
                 </Box>): (<Box 
@@ -364,16 +364,16 @@ function ReCharts() {
                 >
                     <text>
                         &emsp;&emsp;&emsp;<b>Better&emsp;&lArr;</b>
-                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
                         <b>&rArr;&emsp;Worse</b>     
                     </text>
                 </Box>)}
                 <Box className="chart-container"> {/* Chart container */}
                     <ResponsiveContainer width="100%" height="100%">
-                        <BarChart data={chartData} margin={{ top: 40, bottom: 70, left:-20, right:60}}>
+                        <BarChart data={chartData} margin={{ top: 50, bottom: 70, left:-20, right:60}}>
                             <XAxis interval={0} style={{ fontFamily: 'Roboto' }} tick={<CustomXAxisTick/>} dataKey="target"/>
                             <YAxis 
-                                style={{ fontFamily: 'Roboto'}}>
+                                style={{ fontFamily: 'Roboto', fontSize: "18px"}}>
                             </YAxis>
                             <Tooltip formatter={(v: number) => v.toFixed(2)} />
                             <Bar dataKey="value" isAnimationActive={false}>
@@ -384,7 +384,7 @@ function ReCharts() {
                                     dataKey="value"
                                     position="top"
                                     width= {150}
-                                    style={{ fontSize: '1.5vw', fontWeight: 'bold', fill: '#4a4a4a' , fontFamily: 'Roboto' }}
+                                    style={{ fontSize: '1.3vw', fontWeight: 'bold', fill: '#4a4a4a' , fontFamily: 'Roboto' }}
                                     formatter={(v: number) => getBarLabel(selectedMetric, dataType, v)}
                                 />
                             </Bar>
@@ -462,7 +462,41 @@ function ReCharts() {
                 </Typography>
                 </td>
                 <td>
-                <Stack direction="row" spacing={1} useFlexGap sx={{ flexWrap: 'wrap' }}>
+                <Stack direction="row" spacing={1} useFlexGap sx={{ flexWrap: 'wrap'}}>
+                <Chip
+                    key="select-all"
+                    color={selectedTargets.length === allTargets.length ? 'neutral' : 'success'}
+                    onClick={() => {
+                        if (selectedTargets.length < allTargets.length) {
+                            setSelectedTargets([...allTargets]);
+                        }
+                    }}
+                    variant="solid"
+                    sx={{ 
+                        fontFamily: 'Roboto,sans-serif', 
+                        borderRadius: '8px' // Change this value for more or less rounding
+                    }}
+                >
+                    Select All
+                </Chip>
+                <Chip
+                    key="select-none"
+                    color={selectedTargets.length === 0 ? 'neutral' : 'success'}
+                    onClick={() => {
+                        if (selectedTargets.length > 0) {
+                            setSelectedTargets([]);
+                        }
+                    }}
+                    variant="solid"
+                    sx={{ 
+                        fontFamily: 'Roboto,sans-serif', 
+                        borderRadius: '8px' // Change this value for more or less rounding
+                    }}
+                >
+                    Clear
+                </Chip>
+                </Stack>
+                <Stack direction="row" spacing={1} useFlexGap sx={{ flexWrap: 'wrap', marginTop: 2}}>
                 {[...allTargets]
                     .sort()
                     .map(target => (
