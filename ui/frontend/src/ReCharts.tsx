@@ -383,7 +383,7 @@ function ReCharts() {
                                 <LabelList
                                     dataKey="value"
                                     position="top"
-                                    width= {150}
+                                    width= {window.innerWidth/selectedTargets.length}
                                     style={{ fontSize: '1.3vw', fontWeight: 'bold', fill: '#4a4a4a' , fontFamily: 'Roboto' }}
                                     formatter={(v: number) => getBarLabel(selectedMetric, dataType, v)}
                                 />
@@ -417,7 +417,7 @@ function ReCharts() {
                 </Typography>
                 </td>
                 <td>
-                <Stack direction="row" spacing={1}>
+                <Stack direction="row" spacing={1} useFlexGap sx={{ flexWrap: 'wrap'}}>
                 {['json', 'unstructured'].map((t) => (
                 <Chip
                     key={t}
@@ -531,7 +531,7 @@ function ReCharts() {
                 </Typography>
                 </td>
                 <td>
-                <Stack direction="row" spacing={1}>
+                <Stack direction="row" spacing={1} useFlexGap sx={{ flexWrap: 'wrap'}}>
                 {metricOptions.map((m) => (
                 <Chip
                     key={m}
@@ -569,7 +569,7 @@ function ReCharts() {
                     </Typography>
                     </td>
                     <td>
-                    <Stack direction="row" spacing={1}>
+                    <Stack direction="row" spacing={1} useFlexGap sx={{ flexWrap: 'wrap'}}>
                     {JSONDATASETS.map((d) => (
                         <Chip
                         key={d}
@@ -600,7 +600,7 @@ function ReCharts() {
                     </Typography>
                     </td>
                     <td>
-                    <Stack direction="row" spacing={1}>
+                    <Stack direction="row" spacing={1} useFlexGap sx={{ flexWrap: 'wrap'}}>
                     {['hotRun', 'coldRun'].map((m) => (
                         <Chip
                         key={m}
@@ -617,7 +617,7 @@ function ReCharts() {
                 </tr>
             )}
 
-            {/*Dataset Selector*/}
+            {/*Data Format Selector*/}
             {['avg_query_mem', 'avg_ingest_mem', 'query_times'].includes(
                 selectedMetric
             ) && (
@@ -631,7 +631,7 @@ function ReCharts() {
                     </Typography>
                     </td>
                     <td>
-                    <Stack direction="row" spacing={1}>
+                    <Stack direction="row" spacing={1} useFlexGap sx={{ flexWrap: 'wrap'}}>
                     {['raw', 'comparison'].map((d) => (
                         <Chip
                         key={d}
@@ -660,7 +660,7 @@ function ReCharts() {
                     </Typography>
                     </td>
                     <td>
-                    <Stack direction="row" spacing={1}>
+                    <Stack direction="row" spacing={1} useFlexGap sx={{ flexWrap: 'wrap'}}>
                     <Chip
                     color={selectedQuery === -1 ? 'success' : 'neutral'}
                     onClick={() => setSelectedQuery(-1)} // -1 for average
