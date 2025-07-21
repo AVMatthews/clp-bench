@@ -1,6 +1,6 @@
 {
     "target": "clickhouse_native_json (manual_columns=False, keys=['json.t.\\\\$date.:timestamp'], order_by=['json.t.\\\\$date.:timestamp'])",
-    "targetDisplayedName": "ClickHouse (Automatic orderby 'json.t.\\\\$date.:timestamp')",
+    "targetDisplayedName": "ClickHouse",
     "type": 2,
     "color": "#F0B400",
     "datasets": [
