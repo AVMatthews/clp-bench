@@ -13,7 +13,7 @@ The web interface includes a backend and a frontend.
 
 ### Backend
 
-- Enter the `backend` directory.
+- Enter the `ui/backend` directory.
 - Create a virtual `python3` environment under `/backend`:
   ```shell
   python3 -m venv venv
@@ -27,16 +27,15 @@ The web interface includes a backend and a frontend.
   ```shell
   python3 app.py
   ```
-- If this is the first time you've run the backend, you may also need to load the data (leave
-  `app.py` running and run the following in another window, as `load_results.py` requires the
-  database to be initialized):
+- Leave `app.py` running and run the following in another window inside `ui/backend`
   ```shell
-  python3 load_results.py
+  . venv/bin/activate
+  python3 load_results_from_results_dir.py 
   ```
 
 ### Frontend
 
-- Enter the `frontend` directory.
+- Enter the `/ui/frontend` directory.
 - Install dependencies:
   ```
   npm install
@@ -59,6 +58,5 @@ There is a template `.env` file in this directory. To create a custom configurat
 
 # Benchmark results database
 
-We use `sqlite` to manage a database that contains all benchmarking results. `load_results.py`
-automatically loads benchmarking results from the `results.json` file under the directory of each
-target tool.
+We use `sqlite` to manage a database that contains all benchmarking results. `load_results_from_results_dir.py `
+automatically loads benchmarking results from the `/assets/results` directory which is separated semi-structured and unstructured log directories.
