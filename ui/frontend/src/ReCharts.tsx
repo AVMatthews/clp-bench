@@ -286,11 +286,20 @@ function ReCharts() {
   return (
     <Box className="flex-container">
         <Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-            <img
-                src={logo}
-                alt="CLPBench"
-                style={{ width: 100, margin: '15px 0' }}
-            />
+        <Typography 
+                level="h1" 
+                sx={{ 
+                    fontSize: '2.5rem', 
+                    fontWeight: 'bold', 
+                    background: 'linear-gradient(180deg,rgb(0, 216, 181), rgb(0, 120, 243))', // Bright blue gradient
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    fontFamily: 'Roboto, sans-serif',
+                    textShadow: '2px 2px 4px rgba(200, 200, 200, 0.5)', // Moderately light shadow
+                }}
+            >
+                LogArchivalBench
+            </Typography>
         </Box>
         <Box
             sx={{
@@ -305,13 +314,10 @@ function ReCharts() {
                 },
             }}
         >
-            <Link href="https://github.com/y-scope/clp-bench/blob/main/docs/methodology.md">
+            <Link href="https://github.com/y-scope/log-archival-bench">
             Methodology
             </Link>
-            <Divider orientation="vertical" flexItem />
-            <Link href="https://docs.yscope.com/clp/main/user-guide/core-unstructured/clp.html">
-            CLP Documentation
-            </Link>
+
         </Box>
         
         <Box sx={{display: 'flex', height: 40}}>
@@ -319,13 +325,11 @@ function ReCharts() {
         <Box>
             <Typography sx={selectorStyle}>
                     Dataset
-            <IconButton
-                sx={iconButtonStyle}
-                onClick={(e) => {
-                }}
-            >
-                <InfoIcon sx={infoIconStyle}/>
-            </IconButton>: <b>{benchmarkWorkload}</b>
+            <JoyTooltip title="Dataset used for search metrics." arrow placement="right">
+                <IconButton sx={iconButtonStyle}>
+                    <InfoIcon sx={infoIconStyle} />
+                </IconButton>
+            </JoyTooltip>: <b>{benchmarkWorkload}</b>
             </Typography>
         </Box>
         )}
@@ -334,15 +338,6 @@ function ReCharts() {
         <Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: 30}}>
             <Typography level="h4" sx={{color: 'text.primary', marginRight: 1 }}>
                 {getSeriesLabel(selectedMetric)}
-            <IconButton
-                sx={iconButtonStyle}
-                onClick={(e) => {
-                    // You can also toggle the tooltip on click if needed
-                    // For example, using a state to control visibility
-                }}
-            >
-                <InfoIcon sx={infoIconStyle}/>
-            </IconButton>
             </Typography>
         </Box>
 
@@ -456,9 +451,26 @@ function ReCharts() {
                 <td style={{ width: '10%' }}>
                 <Typography sx={selectorStyle}>
                         Tools
-                    <IconButton sx={iconButtonStyle}>
-                        <InfoIcon sx={infoIconStyle}/>
-                    </IconButton>:
+                    <JoyTooltip
+                        title={
+                        <>
+                            List of logging tools with results available.<br />
+                            <br />
+                            Select all or just a few, the graph will adjust to show 
+                        you only the tools you have selected.
+                        </>
+                        }
+                        arrow
+                        placement="right"
+                        sx={{
+                            whiteSpace: 'normal', // Allows text to wrap
+                            maxWidth: '200px',    // Set a maximum width for the tooltip
+                          }}
+                        >
+                        <IconButton sx={iconButtonStyle}>
+                            <InfoIcon sx={infoIconStyle} />
+                        </IconButton>
+                    </JoyTooltip>
                 </Typography>
                 </td>
                 <td>
@@ -525,9 +537,25 @@ function ReCharts() {
                 <td>
                 <Typography sx={selectorStyle}>
                     Metric
-                <IconButton sx={iconButtonStyle}>
-                    <InfoIcon sx={infoIconStyle}/>
-                </IconButton>:
+                    <JoyTooltip
+                        title={
+                        <>
+                            <b>Available Metrics</b>
+                            <br />
+                            Select one at a time to explore the results.
+                        </>
+                        }
+                        arrow
+                        placement="right"
+                        sx={{
+                            whiteSpace: 'normal', // Allows text to wrap
+                            maxWidth: '200px',    // Set a maximum width for the tooltip
+                          }}
+                        >
+                        <IconButton sx={iconButtonStyle}>
+                            <InfoIcon sx={infoIconStyle} />
+                        </IconButton>
+                    </JoyTooltip>:
                 </Typography>
                 </td>
                 <td>
@@ -563,9 +591,23 @@ function ReCharts() {
                     <td>
                     <Typography sx={selectorStyle}>
                         Dataset
-                    <IconButton sx={iconButtonStyle}>
-                        <InfoIcon sx={infoIconStyle}/>
-                    </IconButton>:
+                        <JoyTooltip
+                        title={
+                        <>
+                            Explore metrics on a specific dataset, or view the Average across all datasets.
+                        </>
+                        }
+                        arrow
+                        placement="right"
+                        sx={{
+                            whiteSpace: 'normal', // Allows text to wrap
+                            maxWidth: '200px',    // Set a maximum width for the tooltip
+                          }}
+                        >
+                        <IconButton sx={iconButtonStyle}>
+                            <InfoIcon sx={infoIconStyle} />
+                        </IconButton>
+                    </JoyTooltip>:
                     </Typography>
                     </td>
                     <td>
@@ -594,9 +636,25 @@ function ReCharts() {
                     <td>
                     <Typography sx={selectorStyle}>
                         Run Type
-                    <IconButton sx={iconButtonStyle}>
-                        <InfoIcon sx={infoIconStyle}/>
-                    </IconButton>:
+                        <JoyTooltip
+                        title={
+                        <>
+                            <b>Hot Run</b>: Query run several times and results collected on last run.<br />
+                            <br />
+                            <b>Cold Run</b>: Caches cleared and query run once and results collected on first run.
+                        </> 
+                        }
+                        arrow
+                        placement="right"
+                        sx={{
+                            whiteSpace: 'normal', // Allows text to wrap
+                            maxWidth: '200px',    // Set a maximum width for the tooltip
+                          }}
+                        >
+                        <IconButton sx={iconButtonStyle}>
+                            <InfoIcon sx={infoIconStyle} />
+                        </IconButton>
+                    </JoyTooltip>:
                     </Typography>
                     </td>
                     <td>
@@ -625,9 +683,27 @@ function ReCharts() {
                     <td>
                     <Typography sx={selectorStyle}>
                         Data Format
-                    <IconButton sx={iconButtonStyle}>
-                        <InfoIcon sx={infoIconStyle}/>
-                    </IconButton>:
+                        <JoyTooltip
+                        title={
+                        <>
+                            <b>Raw</b>: metric result value<br />
+                            <br />
+                            <b>Comparison</b>: results are compared to the worst performing tool.<br /><br />
+                            (Worst result of selected tools)/
+                            (Current tool value)
+                        </>
+                        }
+                        arrow
+                        placement="right"
+                        sx={{
+                            whiteSpace: 'normal', // Allows text to wrap
+                            maxWidth: '250px',    // Set a maximum width for the tooltip
+                          }}
+                        >
+                        <IconButton sx={iconButtonStyle}>
+                            <InfoIcon sx={infoIconStyle} />
+                        </IconButton>
+                    </JoyTooltip>:
                     </Typography>
                     </td>
                     <td>
@@ -654,9 +730,24 @@ function ReCharts() {
                     <td>
                     <Typography sx={selectorStyle}>
                         Query #
-                    <IconButton sx={iconButtonStyle}>
-                        <InfoIcon sx={infoIconStyle}/>
-                    </IconButton>:
+                        <JoyTooltip
+                            title={
+                            <>
+                                Explore latency on a specific query, or view the Average across all queries.<br /><br />
+                                Query details can be found in the methodology.
+                            </> 
+                            }
+                            arrow
+                            placement="right"
+                            sx={{
+                                whiteSpace: 'normal', // Allows text to wrap
+                                maxWidth: '200px',    // Set a maximum width for the tooltip
+                            }}
+                            >
+                            <IconButton sx={iconButtonStyle}>
+                                <InfoIcon sx={infoIconStyle} />
+                            </IconButton>
+                        </JoyTooltip>:
                     </Typography>
                     </td>
                     <td>
