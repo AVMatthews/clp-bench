@@ -300,7 +300,7 @@ function ReCharts() {
                     textShadow: '2px 2px 4px rgba(200, 200, 200, 0.5)', // Moderately light shadow
                 }}
             >
-                LogArchivalBench
+                Log Archival Bench
             </Typography>
         </Box>
         <Box
