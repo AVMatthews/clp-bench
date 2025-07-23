@@ -1,8 +1,6 @@
 import './App.css';
-import logo from './assets/clp-logo.png';
 import { useEffect, useState } from 'react';
 import { Box, Chip, Link, Stack, Table, Tooltip as JoyTooltip, Typography } from '@mui/joy';
-import Divider, { dividerClasses } from '@mui/material/Divider';
 import InfoIcon from '@mui/icons-material/Info';
 import IconButton from '@mui/material/IconButton';
 import {
@@ -141,7 +139,8 @@ const CustomXAxisTick = ({ x, y, payload }: any) => {
 };
 
 function ReCharts() {
-  const [type, setType] = useState(TYPE[2]);
+  //const [type, setType] = useState(TYPE[2]);
+  const type = TYPE[2];
   const [metric, setMetric] = useState(METRIC[1]);
   const [dataset, setDataset] = useState('Average');
   const [selectedMetric, setSelectedMetric] = useState('compressionRatio');
@@ -183,7 +182,7 @@ function ReCharts() {
           )
           .map((item) => {
             let value = 0;
-            const sizeMB = item.size / 1024 / 1024;
+            //const sizeMB = item.size / 1024 / 1024;
 
             const Q = (qs: string) =>
               qs
@@ -309,11 +308,7 @@ function ReCharts() {
                 justifyContent: 'center',
                 alignItems: 'center',
                 bgcolor: 'background.paper',
-                color: 'text.secondary',
-                [`& .${dividerClasses.root}`]: {
-                    mx: 0.5,
-                    borderWidth: '1px',
-                },
+                color: 'text.secondary'
             }}
         >
             <Link href="https://github.com/y-scope/log-archival-bench">
@@ -348,16 +343,19 @@ function ReCharts() {
             <Box textAlign="center" mt={4}>Loading data…</Box>
         ) : chartData.length ? (
             <Box display="flex" alignItems="center">
-                {(selectedMetric === 'compressionRatio' || selectedMetric === 'ingestionSpeed' || dataType === 'comparison') ? (<Box 
-                    style={yaxisLabelStyle}
+                {(selectedMetric === 'compressionRatio' || selectedMetric === 'ingestionSpeed' || dataType === 'comparison') ? (
+                <Box 
+                    component="div"
+                    sx={yaxisLabelStyle}
                 >
-                    <text>
+                    <span>
                         &emsp;&emsp;&emsp;<b>Worse&emsp;&lArr;</b>
                         &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
                         <b>&rArr;&emsp; Better</b>     
-                    </text>
+                    </span>
                 </Box>): (<Box 
-                    style={yaxisLabelStyle}
+                    component="div"
+                    sx={yaxisLabelStyle}
                 >
                     <text>
                         &emsp;&emsp;&emsp;<b>Better&emsp;&lArr;</b>
