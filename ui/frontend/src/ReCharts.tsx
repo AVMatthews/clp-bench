@@ -102,7 +102,9 @@ const getBarLabel = (metric: string, dataType: string, value: number) => {
         suffix = 'x';
     }
 
-    if ( value < 1){
+    if (value < 0.01){
+        return value.toFixed(3) + suffix;
+    }else if ( value < 1){
         return value.toFixed(2) + suffix;
     }else {
         if  ((value % 1) < 0.05 || (value % 1) > 0.95) {
