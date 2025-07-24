@@ -311,7 +311,7 @@ function ReCharts() {
                 color: 'text.secondary'
             }}
         >
-            <Link href="https://github.com/y-scope/log-archival-bench">
+            <Link href="https://github.com/y-scope/log-archival-bench/blob/main/docs/methodology.md">
             Methodology
             </Link>
 
