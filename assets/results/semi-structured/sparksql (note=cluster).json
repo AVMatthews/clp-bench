@@ -1,6 +1,6 @@
 {
     "target": "sparksql (note=cluster)",
-    "targetDisplayedName": "SparkSQL",
+    "targetDisplayedName": "SparkSQL + Parquet",
     "type": 2,
     "color": "#D10000",
     "datasets": [
